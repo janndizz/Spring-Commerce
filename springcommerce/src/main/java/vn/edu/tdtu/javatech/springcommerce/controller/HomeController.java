@@ -15,6 +15,7 @@ public class HomeController {
     @GetMapping("/")
     public String index(Model model) {
         model.addAttribute("products", productService.getFeaturedProducts());
+        model.addAttribute("lastedProducts", productService.getLastedProducts());
         return "index"; // trỏ đến file templates/index.html
     }
 }

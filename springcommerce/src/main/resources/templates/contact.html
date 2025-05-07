@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:replace="/fragments/head :: head"></head>
+
 <body>
-<header th:replace="/fragments/header :: header"></header>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
     <symbol xmlns="http://www.w3.org/2000/svg" id="shopping-carriage" viewBox="0 0 24 24" fill="none">
         <path
@@ -77,66 +77,41 @@
               d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6z" />
     </symbol>
 </svg>
-<div class="product-page">
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-lg-8 col-md-10">
-                <!-- Product Image -->
-                <div class="row mb-4">
-                    <div class="col-md-6">
-                        <div class="image-holder">
-                            <img id="product-image" th:src="@{/assets/images/card-item1.jpg}" alt="product-item" class="img-fluid">
+<div class="modal fade" id="modallogin" tabindex="-1" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-md" role="document">
+        <div class="modal-content p-4 rounded-4 shadow-lg" style="background-color: #343a40; color: white;">
+            <div class="modal-header border-0 justify-content-center">
+                <h2 class="modal-title fs-3 fw-semibold text-white">Login</h2>
+            </div>
+            <div class="modal-body">
+                <form id="login-form" class="d-flex flex-column gap-3">
+                    <!-- Username or Email -->
+                    <input type="text" name="username" placeholder="Username or Email Address *" class="form-control p-3 rounded-3" required>
+
+                    <!-- Password -->
+                    <input type="password" name="password" placeholder="Password" class="form-control p-3 rounded-3" required>
+
+                    <!-- Remember me & Forgot password -->
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="remember-me" name="rememberme" value="forever">
+                            <label class="form-check-label" for="remember-me">Remember me</label>
+                        </div>
+                        <div>
+                            <a href="#" class="text-decoration-none small text-white">Forgot your password?</a>
                         </div>
                     </div>
-                    <!-- Product Info -->
-                    <div class="col-md-6">
-                        <div class="summary">
-                            <h3 class="display-7" id="product-title">Product Title</h3>
-                            <span class="product-price fs-3" id="product-price">99₫</span>
-                            <p class="fs-7" id="product-description">Product description here...</p>
-                            <ul class="select">
-                                <li>
-                                    <strong>Colour Shown:</strong> <span id="product-color">Color</span>
-                                </li>
-                                <li>
-                                    <strong>Brand:</strong> <span id="product-brand">Brand</span>
-                                </li>
-                            </ul>
-                            <!-- Quantity and Add to Cart -->
-                            <div class="variations-form shopify-cart">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="quantity d-flex pb-4">
-                                            <div class="qty-number align-top qty-number-plus d-flex justify-content-center align-items-center text-center">
-                                                <span class="increase-qty plus">
-                                                    <svg class="plus"><use xlink:href="#plus"></use></svg>
-                                                </span>
-                                            </div>
-                                            <input type="number" id="quantity_001" class="input-text text-center" step="1" min="1" name="quantity" value="1" title="Qty">
-                                            <div class="qty-number qty-number-minus d-flex justify-content-center align-items-center text-center">
-                                                <span class="increase-qty minus">
-                                                    <svg class="minus"><use xlink:href="#minus"></use></svg>
-                                                </span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <button type="submit" class="btn btn-medium btn-black hvr-sweep-to-right">Add to cart</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Categories -->
-                            <div class="categories d-flex flex-wrap pt-3">
-                                <strong class="pe-2">Categories:</strong>
-                                <span id="product-genre">Genre here</span>
-                            </div>
-                        </div>
+
+                    <!-- Action buttons -->
+                    <div class="d-flex flex-column gap-2 mt-4">
+                        <button type="button" class="btn btn-danger p-3 fw-semibold rounded-3 shadow-sm">Login</button>
+                        <button type="button" class="btn btn-outline-secondary p-3 fw-semibold rounded-3 shadow-sm">Register</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
-<footer th:replace="/fragments/footer :: footer"></footer>
+<div th:replace="/fragments/script :: script"></div>
 </body>
 </html>

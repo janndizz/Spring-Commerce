@@ -23,5 +23,8 @@ public class ProductService {
     public Product getProductById(Long id) {
         return productRepository.findById(id).get();
     }
+    public List<Product> getLastedProducts() {
+        return productRepository.findTop5ByOrderByIdAsc();
+    }
 
 }

@@ -99,40 +99,37 @@
 
 <div class="modal fade" id="modallogin" tabindex="-1" aria-modal="true" role="dialog">
     <div class="modal-dialog modal-fullscreen-md-down modal-md modal-dialog-centered" role="document">
-        <div class="modal-content p-4">
-            <div class="modal-header mx-auto border-0">
-                <h2 class="modal-title fs-3 fw-normal">Login</h2>
+        <div class="modal-content p-4 rounded-4 shadow" style="background-color: #343a40; color: white;">
+            <div class="modal-header border-0 justify-content-center">
+                <h2 class="modal-title fs-3 fw-semibold text-white">Login</h2>
             </div>
             <div class="modal-body">
-                <div class="login-detail">
-                    <div class="login-form p-0">
-                        <div class="col-lg-12 mx-auto">
-                            <form id="login-form">
-                                <input type="text" name="username" placeholder="Username or Email Address *"
-                                       class="mb-3 ps-3 text-input">
-                                <input type="password" name="password" placeholder="Password" class="ps-3 text-input">
-                                <div class="checkbox d-flex justify-content-between mt-4">
-                                    <p class="checkbox-form">
-                                        <label class="">
-                                            <input name="rememberme" type="checkbox" id="remember-me" value="forever"> Remember me </label>
-                                    </p>
-                                    <p class="lost-password">
-                                        <a href="#">Forgot your password?</a>
-                                    </p>
-                                </div>
-                            </form>
+                <form id="login-form" class="d-flex flex-column gap-3">
+                    <input type="text" name="username" placeholder="Username or Email Address *"
+                           class="form-control p-3 rounded-3">
+                    <input type="password" name="password" placeholder="Password"
+                           class="form-control p-3 rounded-3">
+
+                    <div class="d-flex justify-content-between align-items-center mt-2">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="remember-me" name="rememberme" value="forever">
+                            <label class="form-check-label" for="remember-me">Remember me</label>
+                        </div>
+                        <div>
+                            <a href="#" class="text-decoration-none small">Forgot your password?</a>
                         </div>
                     </div>
-                    <div class="modal-footer mt-5 d-flex justify-content-center">
-                        <button type="button" class="btn btn-red hvr-sweep-to-right dark-sweep">Login</button>
-                        <button type="button"
-                                class="btn btn-outline-gray hvr-sweep-to-right dark-sweep">Register</button>
+
+                    <div class="d-flex flex-column gap-2 mt-4">
+                        <button type="button" class="btn btn-danger p-3 fw-semibold">Login</button>
+                        <button type="button" class="btn btn-outline-secondary p-3 fw-semibold">Register</button>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     </div>
 </div>
+
 <!-- Login -->
 
 
@@ -150,19 +147,30 @@
                 </div>
                 <div class="col-lg-3 col-md-12">
                     <div class="btn-wrap">
-                        <a href="#" class="btn btn-black btn-medium text-uppercase hvr-sweep-to-right">Email me</a>
+                        <button class="btn btn-black btn-medium text-uppercase hvr-sweep-to-right" onclick="showEmailForm()">Email me</button>
                     </div>
                 </div>
             </div>
+
+            <!-- Form ẩn lúc đầu -->
+            <div id="emailForm" class="mt-4 d-none">
+                <div class="input-group">
+                    <input type="email" id="userEmail" class="form-control" placeholder="Enter your email" required>
+                    <button class="btn btn-primary" onclick="submitEmail()">Subscribe</button>
+                </div>
+                <div id="emailMessage" class="mt-2"></div>
+            </div>
+
         </div>
     </div>
 </section>
+
 <section id="featured-products" class="product-store">
     <div class="container-md">
         <div class="display-header d-flex align-items-center justify-content-between">
             <h2 class="section-title text-uppercase">Featured Products</h2>
             <div class="btn-right">
-                <a href="index.html" class="d-inline-block text-uppercase text-hover fw-bold">View all</a>
+                <a th:href="@{/products}" class="d-inline-block text-uppercase text-hover fw-bold">View all</a>
             </div>
         </div>
         <div class="product-content padding-small">
@@ -192,179 +200,109 @@
 
 <section id="collection-products" class="py-2 my-2 py-md-5 my-md-5">
     <div class="container-md">
-        <div class="row">
-            <div class="col-lg-6 col-md-6 mb-4">
-                <div class="collection-card card border-0 d-flex flex-row align-items-end jarallax-keep-img">
-                    <img src="images/collection-item1.jpg" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
-                    <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
-                        <h3 class="card-title display-3">
-                            <a href="#">Minimal Collection</a>
-                        </h3>
-                        <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
+        <div id="collectionCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <!-- Slide 1 -->
+                <div class="carousel-item active">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="collection-card card border-0 d-flex flex-row align-items-end jarallax-keep-img">
+                                <img th:src="@{/assets/images/card-image1.jpg}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
+                                <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
+                                    <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="collection-card card border-0 d-flex flex-row jarallax-keep-img">
+                                <img th:src="@{/assets/images/card-image2.jpg}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
+                                <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
+                                    <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 2 -->
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="collection-card card border-0 d-flex flex-row jarallax-keep-img">
+                                <img th:src="@{/assets/images/card-image3.jpg}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
+                                <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
+                                    <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="collection-card card border-0 d-flex flex-row jarallax-keep-img">
+                                <img th:src="@{/assets/images/card-image4.jpg}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
+                                <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
+                                    <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide 3 (chỉ còn 1 ảnh) -->
+                <div class="carousel-item">
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="collection-card card border-0 d-flex flex-row jarallax-keep-img">
+                                <img th:src="@{/assets/images/card-image5.jpg}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
+                                <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
+                                    <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="collection-card card border-0 d-flex flex-row jarallax-keep-img">
+                                <img th:src="@{/assets/images/card-image6.jpg}" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
+                                <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
+                                    <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-lg-6 col-md-6">
-                <div class="collection-card card border-0 d-flex flex-row jarallax-keep-img">
-                    <img src="images/collection-item2.jpg" alt="product-item" class="border-rounded-10 img-fluid jarallax-img">
-                    <div class="card-detail p-3 m-3 p-lg-5 m-lg-5">
-                        <h3 class="card-title display-3">
-                            <a href="#">Sneakers Collection</a>
-                        </h3>
-                        <a href="index.html" class="text-uppercase mt-3 d-inline-block text-hover fw-bold">Shop Now</a>
-                    </div>
-                </div>
-            </div>
+
+            <!-- Điều khiển -->
+            <button class="carousel-control-prev" type="button" data-bs-target="#collectionCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#collectionCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </button>
         </div>
     </div>
 </section>
+
 <section id="latest-products" class="product-store py-2 my-2 py-md-5 my-md-5 pt-0">
     <div class="container-md">
         <div class="display-header d-flex align-items-center justify-content-between">
-            <h2 class="section-title text-uppercase">Latest Products</h2>
+            <h2 class="section-title text-uppercase">Hot CD today</h2>
             <div class="btn-right">
-                <a href="index.html" class="d-inline-block text-uppercase text-hover fw-bold">View all</a>
+                <a th:href="@{/products}" class="d-inline-block text-uppercase text-hover fw-bold">View all</a>
             </div>
         </div>
         <div class="product-content padding-small">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
-                <div class="col mb-4 mb-3">
+                <div class="col mb-4" th:each="product : ${lastedProducts}">
                     <div class="product-card position-relative">
                         <div class="card-img">
-                            <img src="images/card-item6.jpg" alt="product-item" class="product-image img-fluid">
+                            <img th:src="@{/assets/images/{img}(img=${product.imageUrl})}" alt="product-item" class="product-image img-fluid">
                             <div class="cart-concern position-absolute d-flex justify-content-center">
-                                <div class="cart-button d-flex gap-2 justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modallong">
-                                        <svg class="shopping-carriage">
-                                            <use xlink:href="#shopping-carriage"></use>
-                                        </svg>
-                                    </button>
-                                    <button type="button" class="btn btn-light" data-bs-target="#modaltoggle" data-bs-toggle="modal">
-                                        <svg class="quick-view">
-                                            <use xlink:href="#quick-view"></use>
-                                        </svg>
-                                    </button>
-                                </div>
+                                <a th:href="@{/detail/{id}(id=${product.id})}">
+                                    <i class="fa-solid fa-hand-point-up"></i>
+                                </a>
                             </div>
-                            <!-- cart-concern -->
                         </div>
                         <div class="card-detail d-flex justify-content-between align-items-center mt-3">
                             <h3 class="card-title fs-6 fw-normal m-0">
-                                <a href="index.html">Running shoes for men</a>
+                                <a th:href="@{/detail/{id}(id = ${product.id})}" th:text="${product.title}">Product Name</a>
                             </h3>
-                            <span class="card-price fw-bold">$99</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-4 mb-3">
-                    <div class="product-card position-relative">
-                        <div class="card-img">
-                            <img src="images/card-item7.jpg" alt="product-item" class="product-image img-fluid">
-                            <div class="cart-concern position-absolute d-flex justify-content-center">
-                                <div class="cart-button d-flex gap-2 justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modallong">
-                                        <svg class="shopping-carriage">
-                                            <use xlink:href="#shopping-carriage"></use>
-                                        </svg>
-                                    </button>
-                                    <button type="button" class="btn btn-light" data-bs-target="#modaltoggle" data-bs-toggle="modal">
-                                        <svg class="quick-view">
-                                            <use xlink:href="#quick-view"></use>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- cart-concern -->
-                        </div>
-                        <div class="card-detail d-flex justify-content-between align-items-center mt-3">
-                            <h3 class="card-title fs-6 fw-normal m-0">
-                                <a href="index.html">Running shoes for men</a>
-                            </h3>
-                            <span class="card-price fw-bold">$99</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-4 mb-3">
-                    <div class="product-card position-relative">
-                        <div class="card-img">
-                            <img src="images/card-item8.jpg" alt="product-item" class="product-image img-fluid">
-                            <div class="cart-concern position-absolute d-flex justify-content-center">
-                                <div class="cart-button d-flex gap-2 justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modallong">
-                                        <svg class="shopping-carriage">
-                                            <use xlink:href="#shopping-carriage"></use>
-                                        </svg>
-                                    </button>
-                                    <button type="button" class="btn btn-light" data-bs-target="#modaltoggle" data-bs-toggle="modal">
-                                        <svg class="quick-view">
-                                            <use xlink:href="#quick-view"></use>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- cart-concern -->
-                        </div>
-                        <div class="card-detail d-flex justify-content-between align-items-center mt-3">
-                            <h3 class="card-title fs-6 fw-normal m-0">
-                                <a href="index.html">Running shoes for men</a>
-                            </h3>
-                            <span class="card-price fw-bold">$99</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-4 mb-3">
-                    <div class="product-card position-relative">
-                        <div class="card-img">
-                            <img src="images/card-item9.jpg" alt="product-item" class="product-image img-fluid">
-                            <div class="cart-concern position-absolute d-flex justify-content-center">
-                                <div class="cart-button d-flex gap-2 justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modallong">
-                                        <svg class="shopping-carriage">
-                                            <use xlink:href="#shopping-carriage"></use>
-                                        </svg>
-                                    </button>
-                                    <button type="button" class="btn btn-light" data-bs-target="#modaltoggle" data-bs-toggle="modal">
-                                        <svg class="quick-view">
-                                            <use xlink:href="#quick-view"></use>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- cart-concern -->
-                        </div>
-                        <div class="card-detail d-flex justify-content-between align-items-center mt-3">
-                            <h3 class="card-title fs-6 fw-normal m-0">
-                                <a href="index.html">Running shoes for men</a>
-                            </h3>
-                            <span class="card-price fw-bold">$99</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="col mb-4 mb-3">
-                    <div class="product-card position-relative">
-                        <div class="card-img">
-                            <img src="images/card-item10.jpg" alt="product-item" class="product-image img-fluid">
-                            <div class="cart-concern position-absolute d-flex justify-content-center">
-                                <div class="cart-button d-flex gap-2 justify-content-center align-items-center">
-                                    <button type="button" class="btn btn-light" data-bs-toggle="modal" data-bs-target="#modallong">
-                                        <svg class="shopping-carriage">
-                                            <use xlink:href="#shopping-carriage"></use>
-                                        </svg>
-                                    </button>
-                                    <button type="button" class="btn btn-light" data-bs-target="#modaltoggle" data-bs-toggle="modal">
-                                        <svg class="quick-view">
-                                            <use xlink:href="#quick-view"></use>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </div>
-                            <!-- cart-concern -->
-                        </div>
-                        <div class="card-detail d-flex justify-content-between align-items-center mt-3">
-                            <h3 class="card-title fs-6 fw-normal m-0">
-                                <a href="index.html">Running shoes for men</a>
-                            </h3>
-                            <span class="card-price fw-bold">$99</span>
+                            <span class="card-price fw-bold" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫'">Giá</span>
                         </div>
                     </div>
                 </div>
@@ -375,27 +313,7 @@
 
 <footer th:replace="/fragments/footer :: footer"></footer>
 
-<script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
-<script th:src="@{/assets/js/plugins.js}"></script>
-<script th:src="@{/assets/js/script.js}"></script>
-<script>
-    var swiper = new Swiper('.main-swiper', {
-        loop: true,
-        slidesPerView: 1,
-        spaceBetween: 10,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev'
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true
-        },
-        autoplay: {
-            delay: 3000,  // Adjust time between slides
-        }
-    });
-</script>
+<div th:replace="/fragments/script :: script"></div>
 </body>
 
 </html>

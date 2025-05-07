@@ -79,11 +79,6 @@
 </svg>
 <section id="featured-products" class="product-store">
     <div class="container-md">
-        <div class="display-header d-flex align-items-center justify-content-between">
-            <div class="btn-right">
-                <a href="index.html" class="d-inline-block text-uppercase text-hover fw-bold">View all</a>
-            </div>
-        </div>
         <div class="product-content padding-small">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4">
                 <div class="col mb-4" th:each="product : ${products}">
@@ -109,10 +104,6 @@
     </div>
 </section>
 <footer th:replace="/fragments/footer :: footer"></footer>
-
-<script th:src="@{/assets/js/jquery-1.11.0.min.js}"></script>
-<script th:src="@{/assets/js/plugins.js}"></script>
-<script th:src="@{/assets/js/script.js}"></script>
-
+<div th:replace="/fragments/script :: script"></div>
 </body>
 </html>

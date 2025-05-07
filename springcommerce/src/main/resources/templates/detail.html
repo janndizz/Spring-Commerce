@@ -92,7 +92,7 @@
           <div class="col-md-6">
             <div class="summary">
               <h3 class="display-7" id="product-title">[[${product.title}]]</h3>
-              <span class="product-price fs-3" id="product-price">[[${product.price}]]</span>
+              <span class="product-price fs-3" id="product-price">[[${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + '₫']]</span>
               <p class="fs-7" id="product-description">[[${product.description}]]</p>
               <ul class="select">
                 <li>

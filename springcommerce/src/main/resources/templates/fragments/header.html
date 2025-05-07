@@ -57,7 +57,7 @@
     <nav id="header-nav" class="navbar navbar-expand-lg">
         <div class="container-lg">
             <a class="navbar-brand" href="index.html">
-                <img th:src="@{/assets/images/logo.jpg}" class="logo" alt="logo">
+                <img th:src="@{/assets/images/logo.jpg}" width="100" height="auto" class="logo" alt="logo">
             </a>
             <button class="navbar-toggler d-flex d-lg-none order-3 border-0 p-1 ms-2" type="button" data-bs-toggle="offcanvas"
                     data-bs-target="#bdNavbar" aria-controls="bdNavbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -94,6 +94,9 @@
                             <a class="nav-link me-5" th:href="@{/products}">Product</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link me-5" th:href="@{/cart}">Cart</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link me-5" th:href="@{/contact}">Contact</a>
                         </li>
                     </ul>
@@ -102,7 +105,7 @@
             <div class="user-items ps-0 ps-md-5">
                 <ul class="d-flex justify-content-end list-unstyled align-item-center m-0">
                     <li class="pe-3">
-                        <a href="login" data-bs-toggle="modal" data-bs-target="#modallogin" class="border-0">
+                        <a th:href="@{/login}" class="border-0">
                             <svg class="user" width="24" height="24">
                                 <use xlink:href="#user"></use>
                             </svg>
