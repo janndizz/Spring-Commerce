@@ -1,59 +1,273 @@
-<!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-<!--    <link rel="icon" type="image/png" th:href="./assets/img/favicon.png">-->
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}">
-    <!-- FontAwesome CSS -->
-    <link rel="stylesheet" th:href="@{/assets/css/all.min.css}">
-    <link rel="stylesheet" th:href="@{/assets/css/uf-style.css}">
-    <title>Login Form Bootstrap 1 by UIFresh</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recordify</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        /* Giữ nguyên toàn bộ CSS hiện tại */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 1200px;
+            width: 90vw;
+            background: #fff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            display: flex;
+            overflow: hidden;
+            margin: 20px;
+        }
+        .login-section {
+            width: 50%;
+            padding: 60px;
+            animation: slideInLeft 0.8s ease-out;
+        }
+        .promo-section {
+            width: 50%;
+            background: #e6f0f0;
+            padding: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: slideInRight 0.8s ease-out;
+        }
+        .form-group {
+            margin-bottom: 24px;
+        }
+        label {
+            display: block;
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        input[type="text"],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            font-size: 18px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus,
+        input[type="email"]:focus,
+        input[type="password"]:focus {
+            border-color: rgb(0, 85, 85);
+            outline: none;
+        }
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .checkbox-group input {
+            width: 18px;
+            height: 18px;
+            margin: 0;
+        }
+        .checkbox-group label {
+            font-size: 16px;
+            color: #333;
+            margin: 0;
+            line-height: 1.5;
+        }
+        .checkbox-group a {
+            color: rgb(0, 85, 85);
+            text-decoration: none;
+            font-size: 16px;
+        }
+        .checkbox-group a:hover {
+            text-decoration: underline;
+        }
+        .btn {
+            padding: 18px 36px;
+            position: relative;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            text-decoration: none !important;
+            border: none !important;
+            display: inline-block;
+            text-align: center;
+            width: 100%;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        .btn.btn-primary {
+            color: #fff;
+            background: rgb(0, 85, 85);
+        }
+        .btn.btn-primary:hover {
+            background: rgb(0, 65, 65);
+            transform: translateY(-2px);
+        }
+        .promo-section img {
+            max-width: 100%;
+            border-radius: 10px;
+            transition: transform 0.3s ease;
+        }
+        .promo-section img:hover {
+            transform: scale(1.05);
+        }
+        .promo-section .fallback-text {
+            display: none;
+            color: #666;
+            font-size: 16px;
+        }
+        .promo-section img:not([src]) + .fallback-text,
+        .promo-section img[src=""] + .fallback-text,
+        .promo-section img[src*="failed"] + .fallback-text {
+            display: block;
+        }
+        .signup-link {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 16px;
+            color: #666;
+        }
+        .signup-link a {
+            color: rgb(0, 85, 85);
+            text-decoration: none;
+        }
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        .alert {
+            padding: 15px;
+            margin-bottom: 20px;
+            border: 1px solid transparent;
+            border-radius: 10px;
+        }
+        .alert-danger {
+            color: #721c24;
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+        .alert-success {
+            color: #155724;
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+        @keyframes slideInLeft {
+            0% { opacity: 0; transform: translateX(-50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes slideInRight {
+            0% { opacity: 0; transform: translateX(50px); }
+            100% { opacity: 1; transform: translateX(0); }
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+                max-width: 95%;
+                margin: 10px;
+            }
+            .login-section,
+            .promo-section {
+                width: 100%;
+                padding: 30px;
+            }
+            .promo-section {
+                padding: 20px;
+            }
+            .checkbox-label {
+                gap: 8px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="uf-form-signin">
-    <div class="text-center">
-        <a href="https://uifresh.net/"><img src="./assets/img/logo-fb.png" alt="" width="100" height="100"></a>
-        <h1 class="text-white h3">Account Login</h1>
-    </div>
-    <form class="mt-4">
-        <div class="input-group uf-input-group input-group-lg mb-3">
-            <span class="input-group-text fa fa-user"></span>
-            <input type="text" class="form-control" placeholder="Username or Email address">
+
+<div class="container">
+    <!-- Left Side: Login Form -->
+    <div class="login-section">
+        <h2 class="text-3xl font-bold text-gray-800 mb-3">Chào mừng đến với hãng đĩa Recordify</h2>
+
+        <!-- Show error message if there is one -->
+        <div th:if="${param.error}" class="alert alert-danger">
+            <span th:text="${param.errorMessage != null} ? ${param.errorMessage} : 'Tên đăng nhập hoặc mật khẩu không hợp lệ.'"></span>
         </div>
-        <div class="input-group uf-input-group input-group-lg mb-3">
-            <span class="input-group-text fa fa-lock"></span>
-            <input type="password" class="form-control" placeholder="Password">
+        <div th:if="${param.logout}" class="alert alert-success">
+            Bạn đã đăng xuất thành công.
         </div>
-        <div class="d-flex mb-3 justify-content-between">
-            <div class="form-check">
-                <input type="checkbox" class="form-check-input uf-form-check-input" id="exampleCheck1">
-                <label class="form-check-label text-white" for="exampleCheck1">Remember Me</label>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <!-- Login Form - Updated to match Spring Security -->
+        <form id="loginForm" th:action="@{/login}" method="post" class="space-y-6">
+            <!-- Hidden field for redirect URL -->
+            <input type="hidden" id="redirect" name="redirect" th:if="${param.redirect}" th:value="${param.redirect}">
+
+            <!-- Username Input (Spring Security uses 'username' by default) -->
+            <div class="form-group">
+                <label for="username">Tên đăng nhập</label>
+                <input type="text" id="username" name="username" required placeholder="Nhập tên đăng nhập của bạn">
             </div>
-            <a href="#">Forgot password?</a>
+
+            <!-- Password Input -->
+            <div class="form-group">
+                <label for="password">Mật khẩu</label>
+                <input type="password" id="password" name="password" required placeholder="••••••••">
+            </div>
+
+            <!-- Remember Me & Forgot Password -->
+            <div class="checkbox-group">
+                <div class="checkbox-label">
+                    <input type="checkbox" id="remember-me" name="remember-me">
+                    <label for="remember-me">Duy trì đăng nhập</label>
+                </div>
+                <a th:href="@{/forgot-password}" href="/forgot-password">Quên mật khẩu?</a>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary">Đăng Nhập</button>
+        </form>
+
+        <!-- Sign Up Link -->
+        <p class="signup-link">
+            Bạn chưa có tài khoản Recordify? <a th:href="@{/register}" href="/signup">Tạo tài khoản</a>
+        </p>
+    </div>
+
+    <!-- Right Side: Promotional Content -->
+    <div class="promo-section">
+        <div class="text-center">
+            <h3 class="text-2xl font-semibold text-gray-800 mb-4">Khám Phá Âm Nhạc Đặc Sắc cùng Recordify</h3>
+            <p class="text-gray-600 mb-6 text-lg">Tham gia cùng chúng tôi để khám phá bộ sưu tập đĩa vinyl độc quyền và tìm cho mình những bản thu âm hoàn hảo, từ những huyền thoại đến các nghệ sĩ mới.</p>
+            <img th:src="@{/assets/images/card-image2.jpg}" alt="product-item">
+            <p class="fallback-text">Không có sẵn hình ảnh</p>
         </div>
-        <div class="d-grid mb-4">
-            <button type="submit" class="btn uf-btn-primary btn-lg">Login</button>
-        </div>
-        <div class="d-flex mb-3">
-            <div class="dropdown-divider m-auto w-25"></div>
-            <small class="text-nowrap text-white">Or login with</small>
-            <div class="dropdown-divider m-auto w-25"></div>
-        </div>
-        <div class="uf-social-login d-flex justify-content-center">
-            <a href="#" class="uf-social-ic" title="Login with Facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="uf-social-ic" title="Login with Twitter"><i class="fab fa-twitter"></i></a>
-            <a href="#" class="uf-social-ic" title="Login with Google"><i class="fab fa-google"></i></a>
-        </div>
-        <div class="mt-4 text-center">
-            <span class="text-white">Don't have an account?</span>
-            <a href="register.html">Sign Up</a>
-        </div>
-    </form>
+    </div>
 </div>
-<script src="./assets/js/popper.min.js"></script>
-<script src="./assets/js/bootstrap.min.js"></script>
+
+<!-- JavaScript for Form Validation -->
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        if (!username || !password) {
+            alert('Vui lòng điền đầy đủ thông tin.');
+            event.preventDefault();
+            return;
+        }
+    });
+</script>
 </body>
 </html>
