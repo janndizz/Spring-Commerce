@@ -27,18 +27,23 @@ public class OrderService {
     @Autowired
     private CartService cartService;
 
+    @Autowired
+    private ProductRepository productRepository;
+
     public OrderService(OrderRepository orderRepository) {
         this.orderRepository = orderRepository;
     }
+
     public Optional<Order> findOrderById(Long id) {
-        return orderRepository.findById(id);
+        return orderRepository.findByIdWithItems(id);
     }
+
     public List<Order> findAllOrders() {
-        return orderRepository.findAll();
+        return orderRepository.findAllWithItems();
     }
 
     public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+        return orderRepository.findAllWithItems();
     }
 
     @Transactional
@@ -69,44 +74,70 @@ public class OrderService {
 
             totalAmount += cartItem.getQuantity() * cartItem.getProduct().getPrice();
             orderItems.add(orderItem);
+
+            // Update product quantity
+            Product product = cartItem.getProduct();
+            product.setQuantity(product.getQuantity() - cartItem.getQuantity());
+            productRepository.save(product);
         }
 
         order.setTotalAmount(totalAmount);
         order.setItems(orderItems);
 
         orderRepository.save(order);  // cascade will persist OrderItem
-
         cartService.clearCart(user);
     }
 
     public List<Order> getOrdersByUser(String username) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found: " + username));
-        return orderRepository.findByUser(user);
+        return orderRepository.findByUserWithItems(user);
     }
 
     public Order getOrderById(Long orderId) {
-        return orderRepository.findById(orderId).orElse(null);
+        return orderRepository.findByIdWithItems(orderId).orElse(null);
     }
 
     public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }
 
+    @Transactional
     public Order updateOrderStatus(Long id, Status status) {
-        Order order = orderRepository.findById(id)
+        Order order = orderRepository.findByIdWithItems(id)
                 .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
+
+        // Nếu hủy đơn hàng, trả lại số lượng sản phẩm vào kho
+        if (status == Status.CANCELLED && order.getStatus() != Status.CANCELLED) {
+            for (OrderItem item : order.getItems()) {
+                Product product = item.getProduct();
+                product.setQuantity(product.getQuantity() + item.getQuantity());
+                productRepository.save(product);
+            }
+        }
 
         order.setStatus(status);
         return orderRepository.save(order);
     }
 
     public List<Order> findOrdersByStatus(Status status) {
-        return orderRepository.findByStatus(status);
+        return orderRepository.findByStatusWithItems(status);
     }
 
+    @Transactional
     public void deleteOrder(Long id) {
-        orderRepository.deleteById(id);
-    }
+        Order order = orderRepository.findByIdWithItems(id)
+                .orElseThrow(() -> new RuntimeException("Order not found with id: " + id));
 
+        // Nếu đơn hàng chưa bị hủy, trả lại số lượng sản phẩm vào kho
+        if (order.getStatus() != Status.CANCELLED) {
+            for (OrderItem item : order.getItems()) {
+                Product product = item.getProduct();
+                product.setQuantity(product.getQuantity() + item.getQuantity());
+                productRepository.save(product);
+            }
+        }
+
+        orderRepository.delete(order);
+    }
 }

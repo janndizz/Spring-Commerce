@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:replace="/fragments/head :: head"></head>
+<head th:replace="/fragments/head :: head">
+
+</head>
 <body>
 <header th:replace="/fragments/header :: header"></header>
 <svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
@@ -77,6 +79,76 @@
               d="M10 18a7.952 7.952 0 0 0 4.897-1.688l4.396 4.396l1.414-1.414l-4.396-4.396A7.952 7.952 0 0 0 18 10c0-4.411-3.589-8-8-8s-8 3.589-8 8s3.589 8 8 8zm0-14c3.309 0 6 2.691 6 6s-2.691 6-6 6s-6-2.691-6-6s2.691-6 6-6z" />
     </symbol>
 </svg>
+<section id="product-filter" class="py-4 bg-light">
+    <div class="container-md">
+        <div class="card">
+            <div class="card-body">
+                <form th:action="@{/products}" method="get" class="row g-3">
+                    <!-- Genre Dropdown -->
+                    <div class="col-md-3">
+                        <label for="genre" class="form-label">Genre</label>
+                        <select id="genre" name="genre" class="form-select">
+                            <option value="">All Genres</option>
+                            <option th:each="genre : ${genres}"
+                                    th:value="${genre}"
+                                    th:text="${genre}"
+                                    th:selected="${genre == selectedGenre}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Artist Input -->
+                    <div class="col-md-3">
+                        <label for="artist" class="form-label">Artist</label>
+                        <input type="text" id="artist" name="artist" class="form-control"
+                               placeholder="Artist name" th:value="${selectedArtist}">
+                    </div>
+
+                    <!-- Brand Dropdown -->
+                    <div class="col-md-3">
+                        <label for="brand" class="form-label">Brand</label>
+                        <select id="brand" name="brand" class="form-select">
+                            <option value="">All Brands</option>
+                            <option th:each="brand : ${brands}"
+                                    th:value="${brand}"
+                                    th:text="${brand}"
+                                    th:selected="${brand == selectedBrand}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Color Dropdown -->
+                    <div class="col-md-3">
+                        <label for="color" class="form-label">Color</label>
+                        <select id="color" name="color" class="form-select">
+                            <option value="">All Colors</option>
+                            <option th:each="color : ${colors}"
+                                    th:value="${color}"
+                                    th:text="${color}"
+                                    th:selected="${color == selectedColor}"></option>
+                        </select>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="col-md-6">
+                        <label for="minPrice" class="form-label">Min Price</label>
+                        <input type="number" id="minPrice" name="minPrice" class="form-control"
+                               placeholder="Min price" th:value="${selectedMinPrice}">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="maxPrice" class="form-label">Max Price</label>
+                        <input type="number" id="maxPrice" name="maxPrice" class="form-control"
+                               placeholder="Max price" th:value="${selectedMaxPrice}">
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="col-12">
+                        <button type="submit" class="btn btn-primary">Filter</button>
+                        <a th:href="@{/products}" class="btn btn-secondary ms-2">Reset</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
 <section id="featured-products" class="product-store">
     <div class="container-md">
         <div class="product-content padding-small">

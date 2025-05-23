@@ -30,7 +30,7 @@
                         <div class="order-item-details">
                             <h3 th:text="${item.product.title}">Product Name</h3>
                             <p class="item-quantity" th:text="'Số lượng: ' + ${item.quantity}"></p>
-                            <p class="item-price" th:text="'$' + ${#numbers.formatDecimal(item.price * item.quantity, 0, 2)}"></p>
+                            <p class="item-price" th:text="${#numbers.formatDecimal(item.price * item.quantity, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></p>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                 <div class="order-footer">
                     <div class="order-total">
                         <span>Tổng cộng:</span>
-                        <strong th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 0, 2)}"></strong>
+                        <strong th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' ₫'"></strong>
                     </div>
                     <div class="order-actions">
                         <button class="btn btn-outline" th:if="${order.status == 'DELIVERED'}">Mua lại</button>

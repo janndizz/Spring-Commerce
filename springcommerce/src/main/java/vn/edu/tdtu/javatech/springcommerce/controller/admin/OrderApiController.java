@@ -10,15 +10,16 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/admin/api/orders")
+@RequestMapping("/admin/orders")
 public class OrderApiController {
+
     private final OrderService orderService;
 
     public OrderApiController(OrderService orderService) {
         this.orderService = orderService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public ResponseEntity<List<Order>> getAllOrders() {
         return ResponseEntity.ok(orderService.findAllOrders());
     }
@@ -30,31 +31,22 @@ public class OrderApiController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
-    @PutMapping("/{id}/deliver")
-    public ResponseEntity<?> deliverOrder(@PathVariable Long id) {
+    @PutMapping("/update-status/{id}")
+    public ResponseEntity<?> updateOrderStatus(@PathVariable Long id, @RequestBody Map<String, String> request) {
         try {
-            Order deliveredOrder = orderService.updateOrderStatus(id, Status.DELIVERED);
-            return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "message", "Đã xác nhận giao hàng thành công",
-                    "order", deliveredOrder
-            ));
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(Map.of(
-                    "success", false,
-                    "message", e.getMessage()
-            ));
-        }
-    }
+            Status newStatus = Status.valueOf(request.get("status"));
+            Order updatedOrder = orderService.updateOrderStatus(id, newStatus);
 
-    @PutMapping("/{id}/cancel")
-    public ResponseEntity<?> cancelOrder(@PathVariable Long id) {
-        try {
-            Order cancelledOrder = orderService.updateOrderStatus(id, Status.CANCELLED);
+            String message = switch (newStatus) {
+                case PENDING -> "Đã đặt lại trạng thái chờ xử lý";
+                case DELIVERED -> "Đã xác nhận giao hàng thành công";
+                case CANCELLED -> "Đã hủy đơn hàng thành công";
+            };
+
             return ResponseEntity.ok(Map.of(
                     "success", true,
-                    "message", "Đã hủy đơn hàng thành công",
-                    "order", cancelledOrder
+                    "message", message,
+                    "order", updatedOrder
             ));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(Map.of(
@@ -69,7 +61,7 @@ public class OrderApiController {
         return ResponseEntity.ok(orderService.findOrdersByStatus(status));
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteOrder(@PathVariable Long id) {
         try {
             orderService.deleteOrder(id);

@@ -1,34 +1,37 @@
 package vn.edu.tdtu.javatech.springcommerce.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import vn.edu.tdtu.javatech.springcommerce.model.User;
-import vn.edu.tdtu.javatech.springcommerce.repository.UserRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.tdtu.javatech.springcommerce.model.User;
+import vn.edu.tdtu.javatech.springcommerce.service.*;
+import vn.edu.tdtu.javatech.springcommerce.repository.UserRepository;
 
 @Controller
 public class LoginController {
+
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
 
+    // Hiển thị trang đăng nhập
     @GetMapping("/login")
     public String showLoginPage(Model model, @RequestParam(required = false) String logout) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if (authentication != null && authentication.isAuthenticated() &&
                 !authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ANONYMOUS"))) {
+
             if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 return "redirect:/admin";
             } else if (authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_REALTOR"))) {
@@ -41,57 +44,58 @@ public class LoginController {
         if (logout != null) {
             model.addAttribute("logoutMessage", "Đăng xuất thành công!");
         }
+
         return "login";
     }
+
+    // Hiển thị form đăng ký
     @GetMapping("/register")
-    public String registerForm(Model model) {
-        model.addAttribute("user", new User());
+    public String showRegistrationForm(Model model) {
         return "register";
     }
 
     @PostMapping("/register")
-    public String registerUser(@ModelAttribute("user") User user,
-                               @RequestParam("confirmPassword") String confirmPassword,
-                               Model model) {
+    public String registerUser(
+            @RequestParam String username,
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String confirmPassword,
+            @RequestParam String phonenumber,
+            @RequestParam String role,
+            Model model) {
 
-        if (!user.getPassword().equals(confirmPassword)) {
-            model.addAttribute("errorMessage", "Mật khẩu không khớp.");
+        // Validate password match
+        if (!password.equals(confirmPassword)) {
+            model.addAttribute("errorMessage", "Mật khẩu xác nhận không khớp");
             return "register";
         }
 
-        if (userRepository.findByUsername(user.getUsername()).isPresent()) {
-            model.addAttribute("errorMessage", "Tên đăng nhập đã tồn tại.");
+        // Check if username or email already exists
+        if (userService.existsByUsername(username)) {
+            model.addAttribute("errorMessage", "Tên đăng nhập đã được sử dụng");
             return "register";
         }
 
-        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
-            model.addAttribute("errorMessage", "Email đã được sử dụng.");
+        if (userService.existsByEmail(email)) {
+            model.addAttribute("errorMessage", "Email đã được sử dụng");
             return "register";
         }
 
-        // Mã hóa mật khẩu
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(User.Role.CLIENT); // mặc định là CLIENT
+        // Create new user
+        User newUser = new User();
+        newUser.setUsername(username);
+        newUser.setEmail(email);
+        newUser.setPassword(password); // Note: Should be encoded in production
+        newUser.setPhonenumber(phonenumber);
+        newUser.setRole(User.Role.CLIENT);
 
-        userRepository.save(user);
-        model.addAttribute("successMessage", "Đăng ký thành công! Hãy đăng nhập.");
-        return "redirect:/login";
+        try {
+            userService.save(newUser);
+            model.addAttribute("successMessage", "Đăng ký thành công! Vui lòng đăng nhập.");
+            return "redirect:/login?registerSuccess";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Có lỗi xảy ra khi đăng ký: " + e.getMessage());
+            return "register";
+        }
     }
-
-    // Removed the conflicting forgot-password method since it's now in ForgotPasswordController
-
-//    @PostMapping("/forgot-password")
-//    public String handleForgotPassword(
-//            @RequestParam("email") String email,
-//            Model model
-//    ) {
-//        // Gọi service xử lý gửi email hoặc thông báo lỗi nếu không tồn tại
-//        boolean success = yourResetPasswordService.sendResetLink(email);
-//        if (success) {
-//            model.addAttribute("successMessage", "Reset link has been sent to your email.");
-//        } else {
-//            model.addAttribute("errorMessage", "Email address not found.");
-//        }
-//        return "forgot-password";
-//    }
 }

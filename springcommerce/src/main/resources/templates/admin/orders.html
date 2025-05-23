@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{admin/fragments/header :: head}" th:with="title='Order Management'">
+    <meta th:name="_csrf" th:content="${_csrf.token}"/>
+    <meta th:name="_csrf_header" th:content="${_csrf.headerName}"/>
 </head>
 <body>
 <div class="wrapper">
@@ -298,36 +300,37 @@
         };
 
         // Hàm cập nhật trạng thái
-        window.updateStatus = function (id) {
+        window.updateStatus = function(id) {
             $.ajax({
                 url: "/admin/orders/" + id,
                 type: "GET",
-                success: function (order) {
+                success: function(order) {
+                    // Đảm bảo các ID selector chính xác
                     $("#orderIdToUpdate").val(order.id);
 
-                    // Hiển thị trạng thái hiện tại
-                    var currentStatus = $("#currentStatus");
-                    if (order.status === "PENDING") {
-                        currentStatus.val("Đang chờ");
-                    } else if (order.status === "DELIVERED") {
-                        currentStatus.val("Đã giao");
-                    } else {
-                        currentStatus.val("Đã hủy");
+                    // Cập nhật trạng thái hiện tại
+                    let statusText = "";
+                    switch(order.status) {
+                        case "PENDING": statusText = "Đang chờ"; break;
+                        case "DELIVERED": statusText = "Đã giao"; break;
+                        case "CANCELLED": statusText = "Đã hủy"; break;
                     }
+                    $("#currentStatus").val(statusText);
 
                     // Đặt giá trị mặc định cho select
                     $("#newStatus").val(order.status);
 
+                    // Hiển thị modal
                     $("#updateStatusModal").modal("show");
                 },
-                error: function () {
+                error: function() {
                     toastr.error("Không tìm thấy đơn hàng");
                 }
             });
         };
 
         // Xử lý nút Lưu thay đổi trạng thái
-        $("#saveStatusBtn").click(function () {
+        $("#saveStatusBtn").click(function() {
             var id = $("#orderIdToUpdate").val();
             var newStatus = $("#newStatus").val();
 
@@ -336,13 +339,20 @@
                 type: "PUT",
                 contentType: "application/json",
                 data: JSON.stringify({ status: newStatus }),
-                success: function (response) {
-                    toastr.success("Cập nhật trạng thái thành công");
-                    $("#updateStatusModal").modal("hide");
-                    // Reload trang hoặc cập nhật dòng trong bảng
-                    location.reload();
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader(header, token);
                 },
-                error: function (xhr) {
+                success: function(response) {
+                    if(response.success) {
+                        toastr.success(response.message);
+                        $("#updateStatusModal").modal("hide");
+                        // Cập nhật lại bảng thay vì reload toàn bộ trang
+                        table.ajax.reload(null, false);
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function(xhr) {
                     toastr.error("Lỗi: " + (xhr.responseJSON?.message || "Có lỗi xảy ra"));
                 }
             });

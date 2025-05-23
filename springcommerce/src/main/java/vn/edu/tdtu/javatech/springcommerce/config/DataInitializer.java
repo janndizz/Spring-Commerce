@@ -38,11 +38,30 @@ public class DataInitializer {
 
             // 2. Tạo Products (đĩa CD)
             List<Product> products = List.of(
-                    new Product(null, "Thriller", "Michael Jackson", "Pop", 15.99, "Epic", "Black", "Best-selling album of all time", "card-item1.jpg", 100),
-                    new Product(null, "Back in Black", "AC/DC", "Rock", 13.99, "Atlantic", "Black", "Classic hard rock album", "card-image2.jpg", 80),
-                    new Product(null, "The Dark Side of the Moon", "Pink Floyd", "Progressive Rock", 16.99, "Harvest", "Rainbow", "Iconic concept album", "card-image3.jpg", 90),
-                    new Product(null, "Rumours", "Fleetwood Mac", "Rock", 12.50, "Warner Bros.", "Cream", "1977 Grammy-winning album", "card-image4.jpg", 60),
-                    new Product(null, "21", "Adele", "Soul", 14.99, "XL Recordings", "Grey", "Award-winning soulful album", "card-image5.jpg", 70)
+                    // Lana Del Rey albums
+                    new Product(null, "Born To Die", "Lana Del Rey", "Pop", 990000, "Interscope", "Blue", "Debut studio album with hit singles like 'Video Games'", "lana_born_to_die.jpg", 50),
+                    new Product(null, "Norman F. Rockwell!", "Lana Del Rey", "Alternative", 1090000, "Polydor", "White", "Critically acclaimed sixth studio album", "lana_nfr.jpg", 45),
+
+                    // The Weeknd albums
+                    new Product(null, "After Hours", "The Weeknd", "R&B", 790000, "Republic", "Red", "Includes hits like 'Blinding Lights' and 'Save Your Tears'", "weeknd_after_hours.jpg", 60),
+                    new Product(null, "Dawn FM", "The Weeknd", "Pop", 590000, "XO", "Purple", "Concept album with 80s synth-pop influences", "weeknd_dawn_fm.jpg", 55),
+
+                    // Taylor Swift albums
+                    new Product(null, "1989", "Taylor Swift", "Pop", 890000, "Big Machine", "Pastel", "Grammy-winning pop transformation album", "taylor_1989.jpg", 70),
+                    new Product(null, "Folklore", "Taylor Swift", "Indie Folk", 490000, "Republic", "Grey", "Surprise pandemic album with indie aesthetic", "taylor_folklore.jpg", 65),
+
+                    // Billie Eilish albums
+                    new Product(null, "Where Do We Go?", "Billie Eilish", "Alternative", 720000, "Darkroom", "Green", "Debut studio album with dark pop sound", "billie_wwafawdwg.jpg", 75),
+                    new Product(null, "Happier Than Ever", "Billie Eilish", "Pop", 1190000, "Interscope", "Pink", "Sophomore album exploring fame and relationships", "billie_happier.jpg", 60),
+
+                    // Ariana Grande albums
+                    new Product(null, "Thank U, Next", "Ariana Grande", "Pop", 2090000, "Republic", "Peach", "Breakup anthem album with R&B influences", "ariana_tun.jpg", 80),
+                    new Product(null, "Positions", "Ariana Grande", "R&B", 950000, "Republic", "Lavender", "Album with sensual R&B and trap elements", "ariana_positions.jpg", 65),
+
+                    // BlackPink albums
+                    new Product(null, "The Album", "BlackPink", "K-Pop", 720000, "YG Entertainment", "Black", "First Korean full-length studio album", "blackpink_the_album.jpg", 90),
+                    new Product(null, "Born Pink", "BlackPink", "K-Pop", 890000, "YG Entertainment", "Pink", "Second Korean studio album with global hits", "blackpink_born_pink.jpg", 85),
+                    new Product(null, "RUBY", "Jennie (BlackPink)", "K-Pop", 1290000, "YG Entertainment", "Ruby Red", "Jennie's highly anticipated solo album with edgy concepts", "jennie_ruby.jpg", 100)
             );
             productRepository.saveAll(products);
 
