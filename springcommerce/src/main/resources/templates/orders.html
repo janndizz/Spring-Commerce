@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: head"></head>
+
+<body>
+<header th:replace="/fragments/header :: header"></header>
+<svg th:replace="/fragments/svg :: svg"></svg>
+
+<main class="section">
+    <div class="container">
+        <h1 class="title">Lịch sử mua hàng</h1>
+
+        <div class="order-history">
+            <div class="order" th:each="order : ${orders}">
+                <div class="order-header">
+                    <div class="order-info">
+                        <span class="order-id">Mã đơn hàng: <strong th:text="${order.id}"></strong></span>
+                        <span class="order-date" th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></span>
+                    </div>
+                    <div class="order-status"
+                         th:classappend="${order.status == 'DELIVERED' ? ' delivered' : (order.status == 'CANCELLED' ? ' cancelled' : ' pending')}"
+                         th:text="${order.status == 'DELIVERED' ? 'Đã giao' : (order.status == 'CANCELLED' ? 'Đã hủy' : 'Đang xử lý')}">
+                    </div>
+                </div>
+
+                <div class="order-items">
+                    <div class="order-item" th:each="item : ${order.items}">
+                        <img th:src="@{/assets/images/{img}(img=${item.product.imageUrl})}" alt="Product Image">
+                        <div class="order-item-details">
+                            <h3 th:text="${item.product.title}">Product Name</h3>
+                            <p class="item-quantity" th:text="'Số lượng: ' + ${item.quantity}"></p>
+                            <p class="item-price" th:text="'$' + ${#numbers.formatDecimal(item.price * item.quantity, 0, 2)}"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-footer">
+                    <div class="order-total">
+                        <span>Tổng cộng:</span>
+                        <strong th:text="'$' + ${#numbers.formatDecimal(order.totalAmount, 0, 2)}"></strong>
+                    </div>
+                    <div class="order-actions">
+                        <button class="btn btn-outline" th:if="${order.status == 'DELIVERED'}">Mua lại</button>
+                        <button class="btn btn-outline" th:if="${order.status == 'PENDING'}">Hủy đơn hàng</button>
+<!--                        <button class="btn btn-primary">Xem chi tiết</button>-->
+                    </div>
+                </div>
+            </div>
+
+            <div class="empty-state" th:if="${#lists.isEmpty(orders)}">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                </svg>
+                <h3>Bạn chưa có đơn hàng nào</h3>
+                <p>Hãy bắt đầu mua sắm ngay để trải nghiệm dịch vụ của chúng tôi</p>
+                <a href="/products" class="btn btn-primary">Mua sắm ngay</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="fragments/footer :: footer"></footer>
+<div th:replace="/fragments/script :: script"></div>
+
+<style>
+    .order-history {
+        margin-top: 2rem;
+    }
+
+    .order {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    .order-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background-color: #f5f5f5;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .order-info {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .order-id {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .order-date {
+        font-size: 0.8rem;
+        color: #999;
+    }
+
+    .order-status {
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+
+    .order-status.delivered {
+        background-color: #e6f7ee;
+        color: #00a854;
+    }
+
+    .order-status.pending {
+        background-color: #fff7e6;
+        color: #fa8c16;
+    }
+
+    .order-status.cancelled {
+        background-color: #fff1f0;
+        color: #f5222d;
+    }
+
+    .order-items {
+        padding: 1rem;
+    }
+
+    .order-item {
+        display: flex;
+        padding: 1rem 0;
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .order-item:last-child {
+        border-bottom: none;
+    }
+
+    .order-item img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 4px;
+        margin-right: 1rem;
+    }
+
+    .order-item-details {
+        flex: 1;
+    }
+
+    .order-item-details h3 {
+        font-size: 1rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .item-quantity {
+        font-size: 0.9rem;
+        color: #666;
+        margin-bottom: 0.3rem;
+    }
+
+    .item-price {
+        font-weight: 500;
+        color: #333;
+    }
+
+    .order-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        border-top: 1px solid #e0e0e0;
+        background-color: #fafafa;
+    }
+
+    .order-total {
+        font-size: 1.1rem;
+    }
+
+    .order-total strong {
+        margin-left: 0.5rem;
+        color: #1890ff;
+    }
+
+    .order-actions {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 3rem 0;
+    }
+
+    .empty-state svg {
+        color: #d9d9d9;
+        margin-bottom: 1rem;
+    }
+
+    .empty-state h3 {
+        font-size: 1.2rem;
+        margin-bottom: 0.5rem;
+        color: #333;
+    }
+
+    .empty-state p {
+        color: #666;
+        margin-bottom: 1.5rem;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Xử lý các sự kiện trên trang lịch sử mua hàng
+        document.querySelectorAll('.order-actions .btn').forEach(button => {
+            button.addEventListener('click', function (e) {
+                const orderId = this.closest('.order').querySelector('.order-id strong').textContent;
+
+                if (this.textContent.includes('Hủy')) {
+                    if (confirm('Bạn có chắc chắn muốn hủy đơn hàng này?')) {
+                        // Gửi yêu cầu hủy đơn hàng
+                        fetch('/api/orders/' + orderId + '/cancel', {
+                            method: 'POST'
+                        }).then(response => {
+                            if (response.ok) {
+                                location.reload();
+                            } else {
+                                alert('Có lỗi xảy ra khi hủy đơn hàng');
+                            }
+                        });
+                    }
+                } else if (this.textContent.includes('Mua lại')) {
+                    // Thêm tất cả sản phẩm vào giỏ hàng
+                    fetch('/api/orders/' + orderId + '/reorder', {
+                        method: 'POST'
+                    }).then(response => {
+                        if (response.ok) {
+                            window.location.href = '/cart';
+                        } else {
+                            alert('Có lỗi xảy ra khi mua lại đơn hàng');
+                        }
+                    });
+                } else if (this.textContent.includes('Xem chi tiết')) {
+                    window.location.href = '/orders/' + orderId;
+                }
+            });
+        });
+    });
+</script>
+
+</body>
+</html>

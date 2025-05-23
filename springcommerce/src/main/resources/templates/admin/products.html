@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/header :: head}" th:with="title='Product Management'">
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{admin/fragments/header :: sidebar}" th:with="activeMenu='products'"></div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <div th:replace="~{admin/fragments/header :: main-header}"></div>
+
+        <div class="container">
+            <div class="page-inner">
+                <div class="page-header">
+                    <h3 class="fw-bold mb-3">Quản lý sản phẩm</h3>
+                    <ul class="breadcrumbs mb-3">
+                        <li class="nav-home">
+                            <a th:href="@{/admin}">
+                                <i class="icon-home"></i>
+                            </a>
+                        </li>
+                        <li class="separator">
+                            <i class="icon-arrow-right"></i>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#">Sản phẩm</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex align-items-center">
+                                    <h4 class="card-title">Quản lý sản phẩm</h4>
+                                    <button
+                                            class="btn btn-primary btn-round ms-auto"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#addRowModal"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                        Thêm sản phẩm
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Modal Thêm mới -->
+                                <div
+                                        class="modal fade"
+                                        id="addRowModal"
+                                        tabindex="-1"
+                                        role="dialog"
+                                        aria-hidden="true"
+                                >
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header border-0">
+                                                <h5 class="modal-title">
+                                                    <span class="fw-mediumbold">Thêm</span>
+                                                    <span class="fw-light">Sản phẩm</span>
+                                                </h5>
+                                                <button
+                                                        type="button"
+                                                        class="close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"
+                                                >
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="small">
+                                                    Điền đầy đủ thông tin để thêm sản phẩm mới
+                                                </p>
+                                                <form id="addProductForm">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Tên sản phẩm</label>
+                                                                <input
+                                                                        id="addTitle"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập tên sản phẩm"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Nghệ sĩ</label>
+                                                                <input
+                                                                        id="addArtist"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập tên nghệ sĩ"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Thể loại</label>
+                                                                <input
+                                                                        id="addGenre"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập thể loại"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Giá</label>
+                                                                <input
+                                                                        id="addPrice"
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập giá"
+                                                                        step="0.01"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Thương hiệu</label>
+                                                                <input
+                                                                        id="addBrand"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập thương hiệu"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Màu sắc</label>
+                                                                <input
+                                                                        id="addColor"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập màu sắc"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Mô tả</label>
+                                                                <textarea
+                                                                        id="addDescription"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập mô tả"
+                                                                        rows="3"
+                                                                        required
+                                                                ></textarea>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>URL hình ảnh</label>
+                                                                <input
+                                                                        id="addImageUrl"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập URL hình ảnh"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Số lượng</label>
+                                                                <input
+                                                                        id="addQuantity"
+                                                                        type="number"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập số lượng"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer border-0">
+                                                <button
+                                                        type="button"
+                                                        id="addRowButton"
+                                                        class="btn btn-primary"
+                                                >
+                                                    Thêm
+                                                </button>
+                                                <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-bs-dismiss="modal"
+                                                >
+                                                    Đóng
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table
+                                            id="product-table"
+                                            class="display table table-striped table-hover"
+                                    >
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên sản phẩm</th>
+                                            <th>Nghệ sĩ</th>
+                                            <th>Thể loại</th>
+                                            <th>Giá</th>
+                                            <th>Số lượng</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="product : ${products}">
+                                            <td th:text="${product.id}"></td>
+                                            <td th:text="${product.title}"></td>
+                                            <td th:text="${product.artist}"></td>
+                                            <td th:text="${product.genre}"></td>
+                                            <td th:text="${#numbers.formatDecimal(product.price, 1, 2, 'COMMA') + ' ₫'}"></td>
+                                            <td th:text="${product.quantity}"></td>
+                                            <td>
+                                                <div class="form-button-action">
+                                                    <button
+                                                            type="button"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Chỉnh sửa"
+                                                            class="btn btn-link btn-primary btn-lg"
+                                                            th:onclick="'editProduct(' + ${product.id} + ')'"
+                                                    >
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    <button
+                                                            type="button"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Xóa"
+                                                            class="btn btn-link btn-danger"
+                                                            th:onclick="'deleteProduct(' + ${product.id} + ')'"
+                                                    >
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{admin/fragments/footer :: footer}"></footer>
+    </div>
+</div>
+
+<!-- Core JS Files -->
+<div th:replace="~{admin/fragments/footer :: scripts}"></div>
+
+<!-- Custom Script -->
+<script th:inline="javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
+    $(document).ready(function () {
+        // Khởi tạo DataTable
+        var table = $("#product-table").DataTable({
+            pageLength: 10,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+            }
+        });
+
+        // Xử lý nút Thêm sản phẩm
+        $("#addRowButton").click(function () {
+            if (!$("#addProductForm")[0].checkValidity()) {
+                $("#addProductForm")[0].reportValidity();
+                return;
+            }
+
+            var productData = {
+                title: $("#addTitle").val(),
+                artist: $("#addArtist").val(),
+                genre: $("#addGenre").val(),
+                price: parseFloat($("#addPrice").val()),
+                brand: $("#addBrand").val(),
+                color: $("#addColor").val(),
+                description: $("#addDescription").val(),
+                imageUrl: $("#addImageUrl").val(),
+                quantity: parseInt($("#addQuantity").val())
+            };
+
+            $.ajax({
+                url: "/admin/products/add",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(productData),
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        location.reload();
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    toastr.error("Lỗi: " + (xhr.responseJSON?.message || "Có lỗi xảy ra"));
+                }
+            });
+        });
+
+        // Hàm chỉnh sửa sản phẩm
+        window.editProduct = function (id) {
+            $.ajax({
+                url: "/admin/products/" + id,
+                type: "GET",
+                success: function (product) {
+                    $("#editProductId").val(product.id);
+                    $("#editTitle").val(product.title);
+                    $("#editArtist").val(product.artist);
+                    $("#editGenre").val(product.genre);
+                    $("#editPrice").val(product.price);
+                    $("#editBrand").val(product.brand);
+                    $("#editColor").val(product.color);
+                    $("#editDescription").val(product.description);
+                    $("#editImageUrl").val(product.imageUrl);
+                    $("#editQuantity").val(product.quantity);
+                    $("#editProductModal").modal("show");
+                },
+                error: function () {
+                    toastr.error("Không tìm thấy sản phẩm");
+                }
+            });
+        };
+
+        // Xử lý nút Lưu thay đổi
+        $("#saveEditBtn").click(function () {
+            var id = $("#editProductId").val();
+            var productData = {
+                title: $("#editTitle").val(),
+                artist: $("#editArtist").val(),
+                genre: $("#editGenre").val(),
+                price: parseFloat($("#editPrice").val()),
+                brand: $("#editBrand").val(),
+                color: $("#editColor").val(),
+                description: $("#editDescription").val(),
+                imageUrl: $("#editImageUrl").val(),
+                quantity: parseInt($("#editQuantity").val())
+            };
+
+            $.ajax({
+                url: "/admin/products/update/" + id,
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(productData),
+                success: function (response) {
+                    location.reload();
+                    toastr.success("Cập nhật sản phẩm thành công");
+                },
+                error: function (xhr) {
+                    toastr.error("Lỗi: " + xhr.responseJSON.message || "Có lỗi xảy ra");
+                }
+            });
+        });
+
+        // Hàm xóa sản phẩm
+        window.deleteProduct = function (id) {
+            if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
+                $.ajax({
+                    url: "/admin/products/delete/" + id,
+                    type: "DELETE",
+                    success: function (response) {
+                        toastr.success("Xóa sản phẩm thành công");
+                        table.row($("button[onclick='deleteProduct(" + id + ")']").closest("tr")).remove().draw();
+                    },
+                    error: function (xhr) {
+                        toastr.error("Lỗi: " + xhr.responseJSON.message || "Có lỗi xảy ra");
+                    }
+                });
+            }
+        };
+    });
+</script>
+
+<!-- Modal Chỉnh sửa -->
+<div class="modal fade" id="editProductModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <span class="fw-mediumbold">Chỉnh sửa</span>
+                    <span class="fw-light">Sản phẩm</span>
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="small">
+                    Điền đầy đủ thông tin để chỉnh sửa sản phẩm
+                </p>
+                <form id="editProductForm">
+                    <input type="hidden" id="editProductId" />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Tên sản phẩm</label>
+                                <input id="editTitle" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Nghệ sĩ</label>
+                                <input id="editArtist" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Thể loại</label>
+                                <input id="editGenre" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Giá</label>
+                                <input id="editPrice" type="number" class="form-control" step="0.01" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Thương hiệu</label>
+                                <input id="editBrand" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Màu sắc</label>
+                                <input id="editColor" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Mô tả</label>
+                                <textarea id="editDescription" class="form-control" rows="3" required></textarea>
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>URL hình ảnh</label>
+                                <input id="editImageUrl" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Số lượng</label>
+                                <input id="editQuantity" type="number" class="form-control" required />
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" id="saveEditBtn" class="btn btn-primary">
+                    Lưu thay đổi
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

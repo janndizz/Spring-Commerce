@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/header :: head}" th:with="title='User Management'">
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{admin/fragments/header :: sidebar}" th:with="activeMenu='users'"></div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <div th:replace="~{admin/fragments/header :: main-header}"></div>
+
+        <div class="container">
+            <div class="page-inner">
+                <div class="page-header">
+                    <h3 class="fw-bold mb-3">Quản lý người dùng</h3>
+                    <ul class="breadcrumbs mb-3">
+                        <li class="nav-home">
+                            <a th:href="@{/admin}">
+                                <i class="icon-home"></i>
+                            </a>
+                        </li>
+                        <li class="separator">
+                            <i class="icon-arrow-right"></i>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#">Người dùng</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex align-items-center">
+                                    <h4 class="card-title">Quản lý người dùng</h4>
+                                    <button
+                                            class="btn btn-primary btn-round ms-auto"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#addRowModal"
+                                    >
+                                        <i class="fa fa-plus"></i>
+                                        Thêm người dùng
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <!-- Modal Thêm mới -->
+                                <div
+                                        class="modal fade"
+                                        id="addRowModal"
+                                        tabindex="-1"
+                                        role="dialog"
+                                        aria-hidden="true"
+                                >
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header border-0">
+                                                <h5 class="modal-title">
+                                                    <span class="fw-mediumbold">Thêm</span>
+                                                    <span class="fw-light">Người dùng</span>
+                                                </h5>
+                                                <button
+                                                        type="button"
+                                                        class="close"
+                                                        data-bs-dismiss="modal"
+                                                        aria-label="Close"
+                                                >
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="small">
+                                                    Điền đầy đủ thông tin để thêm người dùng mới
+                                                </p>
+                                                <form id="addUserForm">
+                                                    <div class="row">
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Tên đăng nhập</label>
+                                                                <input
+                                                                        id="addUsername"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập tên đăng nhập"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Mật khẩu</label>
+                                                                <input
+                                                                        id="addPassword"
+                                                                        type="password"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập mật khẩu"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Email</label>
+                                                                <input
+                                                                        id="addEmail"
+                                                                        type="email"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập email"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Số điện thoại</label>
+                                                                <input
+                                                                        id="addPhoneNumber"
+                                                                        type="text"
+                                                                        class="form-control"
+                                                                        placeholder="Nhập số điện thoại"
+                                                                        required
+                                                                />
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-sm-12">
+                                                            <div class="form-group form-group-default">
+                                                                <label>Vai trò</label>
+                                                                <select id="addRole" class="form-control" required>
+                                                                    <option value="ADMIN">Quản trị viên</option>
+                                                                    <option value="CLIENT">Khách hàng</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            <div class="modal-footer border-0">
+                                                <button
+                                                        type="button"
+                                                        id="addRowButton"
+                                                        class="btn btn-primary"
+                                                >
+                                                    Thêm
+                                                </button>
+                                                <button
+                                                        type="button"
+                                                        class="btn btn-danger"
+                                                        data-bs-dismiss="modal"
+                                                >
+                                                    Đóng
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="table-responsive">
+                                    <table
+                                            id="user-table"
+                                            class="display table table-striped table-hover"
+                                    >
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tên đăng nhập</th>
+                                            <th>Email</th>
+                                            <th>Số điện thoại</th>
+                                            <th>Vai trò</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="user : ${users}">
+                                            <td th:text="${user.id}"></td>
+                                            <td th:text="${user.username}"></td>
+                                            <td th:text="${user.email}"></td>
+                                            <td th:text="${user.phonenumber}"></td>
+                                            <td>
+                                                <span th:if="${user.role == T(vn.edu.tdtu.javatech.springcommerce.model.User.Role).ADMIN}" class="badge badge-primary">Quản trị viên</span>
+                                                <span th:if="${user.role == T(vn.edu.tdtu.javatech.springcommerce.model.User.Role).CLIENT}" class="badge badge-secondary">Khách hàng</span>
+                                            </td>
+                                            <td>
+                                                <div class="form-button-action">
+                                                    <button
+                                                            type="button"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Chỉnh sửa"
+                                                            class="btn btn-link btn-primary btn-lg"
+                                                            th:onclick="'editUser(' + ${user.id} + ')'"
+                                                    >
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                    <button
+                                                            type="button"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Xóa"
+                                                            class="btn btn-link btn-danger"
+                                                            th:onclick="'deleteUser(' + ${user.id} + ')'"
+                                                    >
+                                                        <i class="fa fa-times"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{admin/fragments/footer :: footer}"></footer>
+    </div>
+</div>
+
+<!-- Core JS Files -->
+<div th:replace="~{admin/fragments/footer :: scripts}"></div>
+
+<!-- Custom Script -->
+<script th:inline="javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
+    $(document).ready(function () {
+        // Khởi tạo DataTable
+        var table = $("#user-table").DataTable({
+            pageLength: 10,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+            }
+        });
+
+        // Xử lý nút Thêm người dùng
+        $("#addRowButton").click(function () {
+            if (!$("#addUserForm")[0].checkValidity()) {
+                $("#addUserForm")[0].reportValidity();
+                return;
+            }
+
+            var userData = {
+                username: $("#addUsername").val(),
+                password: $("#addPassword").val(),
+                email: $("#addEmail").val(),
+                phonenumber: $("#addPhoneNumber").val(),
+                role: $("#addRole").val()
+            };
+
+            $.ajax({
+                url: "/admin/users/add",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success: function (response) {
+                    if (response.success) {
+                        toastr.success(response.message);
+                        location.reload();
+                    } else {
+                        toastr.error(response.message);
+                    }
+                },
+                error: function (xhr) {
+                    toastr.error("Lỗi: " + (xhr.responseJSON?.message || "Có lỗi xảy ra"));
+                }
+            });
+        });
+
+        // Hàm chỉnh sửa người dùng
+        window.editUser = function (id) {
+            $.ajax({
+                url: "/admin/users/" + id,
+                type: "GET",
+                success: function (user) {
+                    $("#editUserId").val(user.id);
+                    $("#editUsername").val(user.username);
+                    $("#editEmail").val(user.email);
+                    $("#editPhoneNumber").val(user.phonenumber);
+                    $("#editRole").val(user.role);
+                    $("#editUserModal").modal("show");
+                },
+                error: function () {
+                    toastr.error("Không tìm thấy người dùng");
+                }
+            });
+        };
+
+        // Xử lý nút Lưu thay đổi
+        $("#saveEditBtn").click(function () {
+            var id = $("#editUserId").val();
+            var userData = {
+                username: $("#editUsername").val(),
+                email: $("#editEmail").val(),
+                phonenumber: $("#editPhoneNumber").val(),
+                role: $("#editRole").val()
+            };
+
+            $.ajax({
+                url: "/admin/users/update/" + id,
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify(userData),
+                success: function (response) {
+                    location.reload();
+                    // Hoặc cập nhật dòng trong bảng mà không cần reload
+                    toastr.success("Cập nhật người dùng thành công");
+                },
+                error: function (xhr) {
+                    toastr.error("Lỗi: " + xhr.responseJSON.message || "Có lỗi xảy ra");
+                }
+            });
+        });
+
+        // Hàm xóa người dùng
+        window.deleteUser = function (id) {
+            if (confirm("Bạn có chắc chắn muốn xóa người dùng này?")) {
+                $.ajax({
+                    url: "/admin/users/delete/" + id,
+                    type: "DELETE",
+                    success: function (response) {
+                        toastr.success("Xóa người dùng thành công");
+                        // Reload trang hoặc xóa dòng trong bảng
+                        table.row($("button[onclick='deleteUser(" + id + ")']").closest("tr")).remove().draw();
+                    },
+                    error: function (xhr) {
+                        toastr.error("Lỗi: " + xhr.responseJSON.message || "Có lỗi xảy ra");
+                    }
+                });
+            }
+        };
+    });
+</script>
+
+<!-- Modal Chỉnh sửa -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <span class="fw-mediumbold">Chỉnh sửa</span>
+                    <span class="fw-light">Người dùng</span>
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p class="small">
+                    Điền đầy đủ thông tin để chỉnh sửa người dùng
+                </p>
+                <form id="editUserForm">
+                    <input type="hidden" id="editUserId" />
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Tên đăng nhập</label>
+                                <input id="editUsername" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Email</label>
+                                <input id="editEmail" type="email" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Số điện thoại</label>
+                                <input id="editPhoneNumber" type="text" class="form-control" required />
+                            </div>
+                        </div>
+                        <div class="col-sm-12">
+                            <div class="form-group form-group-default">
+                                <label>Vai trò</label>
+                                <select id="editRole" class="form-control" required>
+                                    <option value="ADMIN">Quản trị viên</option>
+                                    <option value="CLIENT">Khách hàng</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" id="saveEditBtn" class="btn btn-primary">
+                    Lưu thay đổi
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

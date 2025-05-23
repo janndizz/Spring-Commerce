@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:fragment="head">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="_csrf" th:content="${_csrf.token}" />
+  <meta name="_csrf_header" th:content="${_csrf.headerName}" />
+
+  <title th:text="${title} ? ${title} + ' - Admin Dashboard' : 'Admin Dashboard'">Admin Recordify</title>
+  <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
+  <link rel="icon" th:href="@{/admin/assets/img/kaiadmin/favicon.ico}" type="image/x-icon" />
+
+  <!-- Fonts and icons -->
+  <script src="/admin/assets/js/plugin/webfont/webfont.min.js"></script>
+  <script>
+    WebFont.load({
+      google: { families: ["Public Sans:300,400,500,600,700"] },
+      custom: {
+        families: [
+          "Font Awesome 5 Solid",
+          "Font Awesome 5 Regular",
+          "Font Awesome 5 Brands",
+          "simple-line-icons",
+        ],
+        urls: ["/admin/assets/css/fonts.min.css"],
+      },
+      active: function () {
+        sessionStorage.fonts = true;
+      },
+    });
+  </script>
+
+  <!-- CSS Files -->
+  <link rel="stylesheet" href="/admin/assets/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/admin/assets/css/plugins.min.css" />
+  <link rel="stylesheet" href="/admin/assets/css/kaiadmin.min.css" />
+  <link rel="stylesheet" href="/admin/assets/css/demo.css" />
+  
+  <!-- Additional CSS -->
+  <th:block th:replace="${additionalCss} ?: ~{}"></th:block>
+</head>
+
+<!-- Sidebar Fragment -->
+<div th:fragment="sidebar">
+  <div class="sidebar" data-background-color="dark">
+    <div class="sidebar-logo">
+      <!-- Logo Header -->
+      <div class="logo-header" data-background-color="dark">
+        <a th:href="@{/admin}" class="logo">
+          <img
+                  src="/admin/assets/img/kaiadmin/logo_light.svg"
+                  alt="navbar brand"
+                  class="navbar-brand"
+                  height="20"
+          />
+        </a>
+        <div class="nav-toggle">
+          <button class="btn btn-toggle toggle-sidebar">
+            <i class="gg-menu-right"></i>
+          </button>
+          <button class="btn btn-toggle sidenav-toggler">
+            <i class="gg-menu-left"></i>
+          </button>
+        </div>
+        <button class="topbar-toggler more">
+          <i class="gg-more-vertical-alt"></i>
+        </button>
+      </div>
+      <!-- End Logo Header -->
+    </div>
+    <div class="sidebar-wrapper scrollbar scrollbar-inner">
+      <div class="sidebar-content">
+        <ul class="nav nav-secondary">
+          <li class="nav-item" th:classappend="${activeMenu == 'dashboard'} ? 'active' : ''">
+            <a th:href="@{/admin}">
+              <i class="fas fa-home"></i>
+              <p>Dashboard</p>
+            </a>
+          </li>
+          <li class="nav-section">
+                <span class="sidebar-mini-icon">
+                  <i class="fa fa-ellipsis-h"></i>
+                </span>
+            <h4 class="text-section">Quản lý</h4>
+          </li>
+          <li class="nav-item" th:classappend="${activeMenu == 'users'} ? 'active' : ''">
+            <a th:href="@{/admin/users}">
+              <i class="fas fa-layer-group"></i>
+              <p>Quản lý người dùng</p>
+            </a>
+          </li>
+          <li class="nav-item" th:classappend="${activeMenu == 'products'} ? 'active' : ''">
+            <a th:href="@{/admin/products}">
+              <i class="fas fa-th-list"></i>
+              <p>Quản lý sản phẩm</p>
+            </a>
+          </li>
+          <li class="nav-item" th:classappend="${activeMenu == 'orders'} ? 'active' : ''">
+            <a th:href="@{/admin/orders}">
+              <i class="fas fa-table"></i>
+              <p>Quản lý đơn hàng</p>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Main Header Fragment -->
+<div th:fragment="main-header">
+  <div class="main-header">
+    <div class="main-header-logo">
+      <!-- Logo Header -->
+      <div class="logo-header" data-background-color="dark">
+        <a th:href="@{/admin}" class="logo">
+          <img
+                  src="/admin/assets/img/kaiadmin/logo_light.svg"
+                  alt="navbar brand"
+                  class="navbar-brand"
+                  height="20"
+          />
+        </a>
+        <div class="nav-toggle">
+          <button class="btn btn-toggle toggle-sidebar">
+            <i class="gg-menu-right"></i>
+          </button>
+          <button class="btn btn-toggle sidenav-toggler">
+            <i class="gg-menu-left"></i>
+          </button>
+        </div>
+        <button class="topbar-toggler more">
+          <i class="gg-more-vertical-alt"></i>
+        </button>
+      </div>
+      <!-- End Logo Header -->
+    </div>
+    <!-- Navbar Header -->
+    <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
+      <div class="container-fluid">
+
+        <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
+          <li class="nav-item topbar-user dropdown hidden-caret">
+            <a
+                    class="dropdown-toggle profile-pic"
+                    data-bs-toggle="dropdown"
+                    href="#"
+                    aria-expanded="false"
+            >
+              <div class="avatar-sm">
+                <img
+                        src="/admin/assets/img/profile.jpg"
+                        alt="..."
+                        class="avatar-img rounded-circle"
+                />
+              </div>
+              <span class="profile-username">
+                    <span class="op-7">Hi,</span>
+                    <span class="fw-bold">Admin</span>
+                  </span>
+            </a>
+            <ul class="dropdown-menu dropdown-user animated fadeIn">
+              <div class="dropdown-user-scroll scrollbar-outer">
+                <li>
+                  <div class="user-box">
+                    <div class="avatar-lg">
+                      <img
+                              src="/admin/assets/img/profile.jpg"
+                              alt="image profile"
+                              class="avatar-img rounded"
+                      />
+                    </div>
+                    <div class="u-text">
+                      <h4>Admin</h4>
+                      <p class="text-muted">52200043@gmail.com</p>
+                    </div>
+                  </div>
+                </li>
+                <li sec:authorize="isAuthenticated()">
+                  <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+                    <button type="submit" style="background: none; border: none; color: inherit; cursor: pointer; font: inherit; width: 100%; text-align: left; padding: 8px 20px;">Đăng xuất</button>
+                  </form>
+                </li>
+              </div>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+  </div>
+</div>
+</html> 

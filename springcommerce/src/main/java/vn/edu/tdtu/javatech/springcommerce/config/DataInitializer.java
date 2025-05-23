@@ -30,9 +30,11 @@ public class DataInitializer {
             // 1. Tạo Users
             User admin = new User(null, "admin", passwordEncoder.encode("admin123"), "admin@example.com", "0123456789", Role.ADMIN);
             User client = new User(null, "client", passwordEncoder.encode("client123"), "client@example.com", "0987654321", Role.CLIENT);
+            User client1 = new User(null, "client1", passwordEncoder.encode("client123"), "client1@example.com", "0917654321", Role.CLIENT);
 
             userRepository.save(admin);
             userRepository.save(client);
+            userRepository.save(client1);
 
             // 2. Tạo Products (đĩa CD)
             List<Product> products = List.of(

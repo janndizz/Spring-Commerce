@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Main Footer Fragment -->
+<footer th:fragment="footer" class="footer">
+  <div class="container-fluid d-flex justify-content-between">
+    <nav class="pull-left">
+      <ul class="nav">
+
+      </ul>
+    </nav>
+    <div class="copyright">
+      2025 | Recordify
+    </div>
+    <div>
+      <a href="https://tdtu.edu.vn/">TDTU</a>
+    </div>
+  </div>
+</footer>
+
+<!-- Core JS Scripts Fragment -->
+<div th:fragment="scripts">
+  <!-- Core JS Files -->
+  <script src="/admin/assets/js/core/jquery-3.7.1.min.js"></script>
+  <script src="/admin/assets/js/core/popper.min.js"></script>
+  <script src="/admin/assets/js/core/bootstrap.min.js"></script>
+
+  <!-- jQuery Scrollbar -->
+  <script src="/admin/assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js"></script>
+
+  <!-- Chart JS -->
+  <script src="/admin/assets/js/plugin/chart.js/chart.min.js"></script>
+
+  <!-- jQuery Sparkline -->
+  <script src="/admin/assets/js/plugin/jquery.sparkline/jquery.sparkline.min.js"></script>
+
+  <!-- Datatables -->
+  <script src="/admin/assets/js/plugin/datatables/datatables.min.js"></script>
+
+  <!-- Bootstrap Notify -->
+  <script src="/admin/assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js"></script>
+
+  <!-- Kaiadmin JS -->
+  <script src="/admin/assets/js/kaiadmin.min.js"></script>
+
+  <!-- Kaiadmin DEMO methods, don't include it in your project! -->
+  <script src="/admin/assets/js/setting-demo.js"></script>
+  <script src="/admin/assets/js/demo.js"></script>
+  
+  <!-- Additional Scripts -->
+  <th:block th:replace="${additionalScripts} ?: ~{}"></th:block>
+</div>
+
+</html> 

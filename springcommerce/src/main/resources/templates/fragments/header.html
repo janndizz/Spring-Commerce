@@ -108,9 +108,14 @@
                             <span th:text="${#authentication.name}" class="fw-semibold"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end mt-2 shadow-sm rounded-3" aria-labelledby="userDropdown">
+<!--                            <li>-->
+<!--                                <a class="dropdown-item" th:href="@{/profile}">-->
+<!--                                    <i class="bi bi-person-circle me-2"></i> Trang cá nhân-->
+<!--                                </a>-->
+<!--                            </li>-->
                             <li>
-                                <a class="dropdown-item" th:href="@{/profile}">
-                                    <i class="bi bi-person-circle me-2"></i> Trang cá nhân
+                                <a class="dropdown-item" th:href="@{/orders}">
+                                    <i class="bi bi-person-circle me-2"></i> Lịch sử đơn hàng
                                 </a>
                             </li>
                             <li>

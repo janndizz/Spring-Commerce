@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head th:replace="~{admin/fragments/header :: head}">
+</head>
+<body>
+<div class="wrapper">
+  <!-- Sidebar -->
+  <div th:replace="~{admin/fragments/header :: sidebar}" th:with="activeMenu='dashboard'"></div>
+  <!-- End Sidebar -->
+
+  <div class="main-panel">
+    <div th:replace="~{admin/fragments/header :: main-header}"></div>
+
+    <!-- Body -->
+    <div class="container">
+      <div class="page-inner">
+        <div class="d-flex align-items-left align-items-md-center flex-column flex-md-row pt-2 pb-4">
+          <div>
+            <h3 class="fw-bold mb-3">Dashboard</h3>
+            <h6 class="op-7 mb-2">Quản lý cửa hàng bán đĩa</h6>
+          </div>
+          <div class="ms-md-auto py-2 py-md-0">
+            <a href="/admin/products" class="btn btn-primary btn-round">Thêm sản phẩm mới</a>
+          </div>
+        </div>
+
+        <div class="row">
+          <!-- Tổng doanh thu -->
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div class="icon-big text-center icon-primary bubble-shadow-small">
+                      <i class="fas fa-money-bill-wave"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      <p class="card-category">Tổng doanh thu</p>
+                      <h4 class="card-title" id="totalRevenue">0 VNĐ</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tổng đơn hàng -->
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div class="icon-big text-center icon-info bubble-shadow-small">
+                      <i class="fas fa-shopping-cart"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      <p class="card-category">Tổng đơn hàng</p>
+                      <h4 class="card-title" id="totalOrders">0</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sản phẩm trong kho -->
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div class="icon-big text-center icon-success bubble-shadow-small">
+                      <i class="fas fa-compact-disc"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      <p class="card-category">Sản phẩm trong kho</p>
+                      <h4 class="card-title" id="totalProducts">0</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Khách hàng -->
+          <div class="col-sm-6 col-md-3">
+            <div class="card card-stats card-round">
+              <div class="card-body">
+                <div class="row align-items-center">
+                  <div class="col-icon">
+                    <div class="icon-big text-center icon-secondary bubble-shadow-small">
+                      <i class="fas fa-users"></i>
+                    </div>
+                  </div>
+                  <div class="col col-stats ms-3 ms-sm-0">
+                    <div class="numbers">
+                      <p class="card-category">Khách hàng</p>
+                      <h4 class="card-title" id="totalCustomers">0</h4>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Thống kê đơn giản -->
+        <div class="row mt-4">
+          <div class="col-md-6">
+            <div class="card card-round">
+              <div class="card-header">
+                <div class="card-head-row">
+                  <div class="card-title">Trạng thái đơn hàng</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="row text-center">
+                  <div class="col-md-4">
+                    <h5 class="text-info" id="pendingOrders">0</h5>
+                    <p>Đang chờ</p>
+                  </div>
+                  <div class="col-md-4">
+                    <h5 class="text-success" id="deliveredOrders">0</h5>
+                    <p>Đã giao</p>
+                  </div>
+                  <div class="col-md-4">
+                    <h5 class="text-danger" id="cancelledOrders">0</h5>
+                    <p>Đã hủy</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="card card-round">
+              <div class="card-header">
+                <div class="card-head-row">
+                  <div class="card-title">Sản phẩm sắp hết hàng</div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div id="lowStockProducts">
+                  <p class="text-center">Không có sản phẩm nào sắp hết hàng</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Danh sách đơn hàng gần đây -->
+        <div class="row mt-4">
+          <div class="col-md-12">
+            <div class="card card-round">
+              <div class="card-header">
+                <div class="card-head-row">
+                  <h4 class="card-title">Đơn hàng gần đây</h4>
+                </div>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive">
+                  <table class="table align-items-center mb-0" id="recentOrdersTable">
+                    <thead class="thead-light">
+                    <tr>
+                      <th scope="col">Mã đơn</th>
+                      <th scope="col">Khách hàng</th>
+                      <th scope="col" class="text-end">Ngày đặt</th>
+                      <th scope="col" class="text-end">Tổng tiền</th>
+                      <th scope="col" class="text-end">Trạng thái</th>
+                      <th scope="col" class="text-end">Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <!-- Dữ liệu sẽ được thêm bằng JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- End Body -->
+
+    <footer th:replace="~{admin/fragments/footer :: footer}"></footer>
+  </div>
+</div>
+
+<!-- Core JS Files -->
+<div th:replace="~{admin/fragments/footer :: scripts}"></div>
+
+<!-- Custom JavaScript -->
+<script>
+  $(document).ready(function () {
+    // Hàm định dạng tiền VNĐ
+    function formatVND(amount) {
+      return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+    }
+
+    // Hàm định dạng ngày giờ
+    function formatDateTime(dateTimeStr) {
+      const date = new Date(dateTimeStr);
+      return date.toLocaleString('vi-VN', {
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+
+    // Dữ liệu mẫu
+    const mockStats = {
+      totalRevenue: 135000000,
+      totalOrders: 120,
+      totalProducts: 85,
+      totalCustomers: 40,
+      pendingOrders: 10,
+      deliveredOrders: 95,
+      cancelledOrders: 15,
+      lowStockProducts: [
+        { id: 1, title: "Album A", quantity: 2 },
+        { id: 2, title: "Album B", quantity: 1 }
+      ]
+    };
+
+    const mockOrders = [
+      {
+        id: 101,
+        user: { username: "khach1" },
+        orderDate: "2025-05-22T10:15:00",
+        totalAmount: 2500000,
+        status: "DELIVERED"
+      },
+      {
+        id: 102,
+        user: { username: "khach2" },
+        orderDate: "2025-05-21T18:45:00",
+        totalAmount: 1700000,
+        status: "PENDING"
+      },
+      {
+        id: 103,
+        user: { username: "khach3" },
+        orderDate: "2025-05-20T14:10:00",
+        totalAmount: 900000,
+        status: "CANCELLED"
+      }
+    ];
+
+    // Load stats
+    $('#totalRevenue').text(formatVND(mockStats.totalRevenue));
+    $('#totalOrders').text(mockStats.totalOrders);
+    $('#totalProducts').text(mockStats.totalProducts);
+    $('#totalCustomers').text(mockStats.totalCustomers);
+    $('#pendingOrders').text(mockStats.pendingOrders);
+    $('#deliveredOrders').text(mockStats.deliveredOrders);
+    $('#cancelledOrders').text(mockStats.cancelledOrders);
+
+    if (mockStats.lowStockProducts.length > 0) {
+      let html = '';
+      mockStats.lowStockProducts.forEach(p => {
+        html += `
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <span>${p.title} (Còn ${p.quantity})</span>
+            <a href="/admin/products/edit/${p.id}" class="btn btn-sm btn-warning">Nhập hàng</a>
+          </div>
+        `;
+      });
+      $('#lowStockProducts').html(html);
+    }
+
+    // Load recent orders
+    const tbody = $('#recentOrdersTable tbody');
+    mockOrders.forEach(order => {
+      const statusClass = order.status === 'DELIVERED' ? 'success' : order.status === 'CANCELLED' ? 'danger' : 'secondary';
+      const row = `
+        <tr>
+          <td>${order.id}</td>
+          <td>${order.user.username}</td>
+          <td class="text-end">${formatDateTime(order.orderDate)}</td>
+          <td class="text-end">${formatVND(order.totalAmount)}</td>
+          <td class="text-end"><span class="badge badge-${statusClass}">${order.status}</span></td>
+          <td class="text-end">
+            <a href="/admin/orders/${order.id}" class="btn btn-sm btn-info">Xem</a>
+          </td>
+        </tr>
+      `;
+      tbody.append(row);
+    });
+  });
+</script>
+
+</body>
+</html>

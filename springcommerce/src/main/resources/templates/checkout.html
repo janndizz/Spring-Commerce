@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="/fragments/head :: head"></head>
+
+<body>
+<header th:replace="/fragments/header :: header"></header>
+
+<main class="section">
+    <div class="container checkout-container">
+        <div class="checkout-box" style="max-width: 600px; margin: auto; padding: 2rem; background-color: #fff; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <h2 style="margin-bottom: 1.5rem; text-align: center;">Thông tin thanh toán</h2>
+            <form th:action="@{/checkout}" method="post">
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="name">Họ tên:</label>
+                    <input type="text" id="name" class="form-control" th:value="${userFullName}" readonly style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="address">Địa chỉ:</label>
+                    <input type="text" id="address" name="address" required placeholder="Nhập địa chỉ giao hàng" style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label for="phone">Số điện thoại:</label>
+                    <input type="text" id="phone" class="form-control" th:value="${userPhone}" readonly style="width: 100%; padding: 0.5rem; border: 1px solid #ccc; border-radius: 4px;">
+                </div>
+
+                <div th:if="${error}" class="alert alert-danger" th:text="${error}" style="margin-bottom: 1rem;"></div>
+
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <h3 style="text-align: right;">Tổng tiền: <span th:text="'$' + ${#numbers.formatDecimal(total, 0, 2)}" style="color: #e91e63;"></span></h3>
+                </div>
+
+                <div class="form-group" style="text-align: center;">
+                    <button type="submit" class="btn btn-primary" style="padding: 0.75rem 2rem; font-size: 1rem; background-color: #1890ff; border: none; border-radius: 4px; color: white;">Xác nhận thanh toán</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="/fragments/footer :: footer"></footer>
+</body>
+</html>

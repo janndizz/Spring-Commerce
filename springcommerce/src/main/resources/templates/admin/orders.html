@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/fragments/header :: head}" th:with="title='Order Management'">
+</head>
+<body>
+<div class="wrapper">
+    <!-- Sidebar -->
+    <div th:replace="~{admin/fragments/header :: sidebar}" th:with="activeMenu='orders'"></div>
+    <!-- End Sidebar -->
+
+    <div class="main-panel">
+        <div th:replace="~{admin/fragments/header :: main-header}"></div>
+
+        <div class="container">
+            <div class="page-inner">
+                <div class="page-header">
+                    <h3 class="fw-bold mb-3">Quản lý đơn hàng</h3>
+                    <ul class="breadcrumbs mb-3">
+                        <li class="nav-home">
+                            <a th:href="@{/admin}">
+                                <i class="icon-home"></i>
+                            </a>
+                        </li>
+                        <li class="separator">
+                            <i class="icon-arrow-right"></i>
+                        </li>
+                        <li class="nav-item">
+                            <a href="#">Đơn hàng</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header">
+                                <div class="d-flex align-items-center">
+                                    <h4 class="card-title">Danh sách đơn hàng</h4>
+                                    <div class="ms-auto">
+                                        <select id="statusFilter" class="form-control" style="width: 200px; display: inline-block;">
+                                            <option value="">Tất cả trạng thái</option>
+                                            <option value="PENDING">Đang chờ</option>
+                                            <option value="DELIVERED">Đã giao</option>
+                                            <option value="CANCELLED">Đã hủy</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table
+                                            id="order-table"
+                                            class="display table table-striped table-hover"
+                                    >
+                                        <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Khách hàng</th>
+                                            <th>Ngày đặt</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Địa chỉ</th>
+                                            <th>Trạng thái</th>
+                                            <th>Hành động</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="order : ${orders}">
+                                            <td th:text="${order.id}"></td>
+                                            <td th:text="${order.user.username}"></td>
+                                            <td th:text="${#temporals.format(order.orderDate, 'dd/MM/yyyy HH:mm')}"></td>
+                                            <td th:text="${#numbers.formatDecimal(order.totalAmount, 0, 'COMMA', 0, 'POINT') + ' ₫'}"></td>
+                                            <td th:text="${order.address}"></td>
+                                            <td>
+                                                <span th:if="${order.status == T(vn.edu.tdtu.javatech.springcommerce.model.Order.Status).PENDING}"
+                                                      class="badge badge-warning">Đang chờ</span>
+                                                <span th:if="${order.status == T(vn.edu.tdtu.javatech.springcommerce.model.Order.Status).DELIVERED}"
+                                                      class="badge badge-success">Đã giao</span>
+                                                <span th:if="${order.status == T(vn.edu.tdtu.javatech.springcommerce.model.Order.Status).CANCELLED}"
+                                                      class="badge badge-danger">Đã hủy</span>
+                                            </td>
+                                            <td>
+                                                <div class="form-button-action">
+                                                    <button
+                                                            type="button"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Xem chi tiết"
+                                                            class="btn btn-link btn-info btn-lg"
+                                                            th:onclick="'viewOrder(' + ${order.id} + ')'"
+                                                    >
+                                                        <i class="fa fa-eye"></i>
+                                                    </button>
+                                                    <button
+                                                            type="button"
+                                                            data-bs-toggle="tooltip"
+                                                            title="Cập nhật trạng thái"
+                                                            class="btn btn-link btn-primary"
+                                                            th:onclick="'updateStatus(' + ${order.id} + ')'"
+                                                    >
+                                                        <i class="fa fa-edit"></i>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer th:replace="~{admin/fragments/footer :: footer}"></footer>
+    </div>
+</div>
+
+<!-- Core JS Files -->
+<div th:replace="~{admin/fragments/footer :: scripts}"></div>
+
+<!-- Modal Chi tiết đơn hàng -->
+<div class="modal fade" id="orderDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <span class="fw-mediumbold">Chi tiết</span>
+                    <span class="fw-light">Đơn hàng #<span id="orderIdHeader"></span></span>
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <h5>Thông tin khách hàng</h5>
+                        <p><strong>Tên:</strong> <span id="customerName"></span></p>
+                        <p><strong>Email:</strong> <span id="customerEmail"></span></p>
+                        <p><strong>SĐT:</strong> <span id="customerPhone"></span></p>
+                    </div>
+                    <div class="col-md-6">
+                        <h5>Thông tin đơn hàng</h5>
+                        <p><strong>Ngày đặt:</strong> <span id="orderDate"></span></p>
+                        <p><strong>Trạng thái:</strong> <span id="orderStatus" class="badge"></span></p>
+                        <p><strong>Địa chỉ giao hàng:</strong> <span id="orderAddress"></span></p>
+                    </div>
+                </div>
+
+                <h5>Danh sách sản phẩm</h5>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Sản phẩm</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                        </thead>
+                        <tbody id="orderItemsList">
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="4" class="text-end"><strong>Tổng cộng:</strong></td>
+                            <td><strong id="orderTotal"></strong></td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Cập nhật trạng thái -->
+<div class="modal fade" id="updateStatusModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header border-0">
+                <h5 class="modal-title">
+                    <span class="fw-mediumbold">Cập nhật</span>
+                    <span class="fw-light">Trạng thái đơn hàng</span>
+                </h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="orderIdToUpdate">
+                <div class="form-group">
+                    <label>Trạng thái hiện tại</label>
+                    <input type="text" class="form-control" id="currentStatus" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Chọn trạng thái mới</label>
+                    <select class="form-control" id="newStatus">
+                        <option value="PENDING">Đang chờ</option>
+                        <option value="DELIVERED">Đã giao</option>
+                        <option value="CANCELLED">Đã hủy</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer border-0">
+                <button type="button" id="saveStatusBtn" class="btn btn-primary">
+                    Lưu thay đổi
+                </button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                    Đóng
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Custom Script -->
+<script th:inline="javascript">
+    var token = $("meta[name='_csrf']").attr("content");
+    var header = $("meta[name='_csrf_header']").attr("content");
+
+    $(document).ajaxSend(function(e, xhr, options) {
+        xhr.setRequestHeader(header, token);
+    });
+
+    $(document).ready(function () {
+        // Khởi tạo DataTable
+        var table = $("#order-table").DataTable({
+            pageLength: 10,
+            language: {
+                url: '//cdn.datatables.net/plug-ins/1.13.7/i18n/vi.json'
+            }
+        });
+
+        // Lọc theo trạng thái
+        $("#statusFilter").change(function() {
+            var status = $(this).val();
+            if (status === "") {
+                table.search('').columns().search('').draw();
+            } else {
+                table.column(5).search(status).draw();
+            }
+        });
+
+        // Hàm xem chi tiết đơn hàng
+        window.viewOrder = function (id) {
+            $.ajax({
+                url: "/admin/orders/" + id,
+                type: "GET",
+                success: function (order) {
+                    // Hiển thị thông tin đơn hàng
+                    $("#orderIdHeader").text(order.id);
+                    $("#customerName").text(order.user.username);
+                    $("#customerEmail").text(order.user.email);
+                    $("#customerPhone").text(order.user.phonenumber || 'N/A');
+                    $("#orderDate").text(new Date(order.orderDate).toLocaleString());
+                    $("#orderAddress").text(order.address);
+
+                    // Hiển thị trạng thái
+                    var statusBadge = $("#orderStatus");
+                    statusBadge.removeClass("badge-warning badge-success badge-danger");
+                    if (order.status === "PENDING") {
+                        statusBadge.addClass("badge-warning").text("Đang chờ");
+                    } else if (order.status === "DELIVERED") {
+                        statusBadge.addClass("badge-success").text("Đã giao");
+                    } else {
+                        statusBadge.addClass("badge-danger").text("Đã hủy");
+                    }
+
+                    // Hiển thị danh sách sản phẩm
+                    var itemsHtml = "";
+                    order.items.forEach(function(item, index) {
+                        itemsHtml += `
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${item.product.name}</td>
+                                <td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price)}</td>
+                                <td>${item.quantity}</td>
+                                <td>${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(item.price * item.quantity)}</td>
+                            </tr>
+                        `;
+                    });
+                    $("#orderItemsList").html(itemsHtml);
+
+                    // Hiển thị tổng tiền
+                    $("#orderTotal").text(new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(order.totalAmount));
+
+                    $("#orderDetailModal").modal("show");
+                },
+                error: function () {
+                    toastr.error("Không tìm thấy đơn hàng");
+                }
+            });
+        };
+
+        // Hàm cập nhật trạng thái
+        window.updateStatus = function (id) {
+            $.ajax({
+                url: "/admin/orders/" + id,
+                type: "GET",
+                success: function (order) {
+                    $("#orderIdToUpdate").val(order.id);
+
+                    // Hiển thị trạng thái hiện tại
+                    var currentStatus = $("#currentStatus");
+                    if (order.status === "PENDING") {
+                        currentStatus.val("Đang chờ");
+                    } else if (order.status === "DELIVERED") {
+                        currentStatus.val("Đã giao");
+                    } else {
+                        currentStatus.val("Đã hủy");
+                    }
+
+                    // Đặt giá trị mặc định cho select
+                    $("#newStatus").val(order.status);
+
+                    $("#updateStatusModal").modal("show");
+                },
+                error: function () {
+                    toastr.error("Không tìm thấy đơn hàng");
+                }
+            });
+        };
+
+        // Xử lý nút Lưu thay đổi trạng thái
+        $("#saveStatusBtn").click(function () {
+            var id = $("#orderIdToUpdate").val();
+            var newStatus = $("#newStatus").val();
+
+            $.ajax({
+                url: "/admin/orders/update-status/" + id,
+                type: "PUT",
+                contentType: "application/json",
+                data: JSON.stringify({ status: newStatus }),
+                success: function (response) {
+                    toastr.success("Cập nhật trạng thái thành công");
+                    $("#updateStatusModal").modal("hide");
+                    // Reload trang hoặc cập nhật dòng trong bảng
+                    location.reload();
+                },
+                error: function (xhr) {
+                    toastr.error("Lỗi: " + (xhr.responseJSON?.message || "Có lỗi xảy ra"));
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

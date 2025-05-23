@@ -14,6 +14,10 @@ public class ProductService {
     @Autowired
     private ProductRepository productRepository;
 
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
     public List<Product> getFeaturedProducts() {
         return productRepository.findTop5ByOrderByIdDesc();
     }
@@ -25,6 +29,29 @@ public class ProductService {
     }
     public List<Product> getLastedProducts() {
         return productRepository.findTop5ByOrderByIdAsc();
+    }
+
+    public Product saveProduct(Product product) {
+        return productRepository.save(product);
+    }
+
+    public Product updateProduct(Long id, Product updatedProduct) {
+        Product existingProduct = getProductById(id);
+        existingProduct.setTitle(updatedProduct.getTitle());
+        existingProduct.setArtist(updatedProduct.getArtist());
+        existingProduct.setGenre(updatedProduct.getGenre());
+        existingProduct.setPrice(updatedProduct.getPrice());
+        existingProduct.setBrand(updatedProduct.getBrand());
+        existingProduct.setColor(updatedProduct.getColor());
+        existingProduct.setDescription(updatedProduct.getDescription());
+        existingProduct.setImageUrl(updatedProduct.getImageUrl());
+        existingProduct.setQuantity(updatedProduct.getQuantity());
+
+        return productRepository.save(existingProduct);
+    }
+
+    public void deleteProduct(Long id) {
+        productRepository.deleteById(id);
     }
 
 }

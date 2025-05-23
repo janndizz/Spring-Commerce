@@ -7,6 +7,7 @@ import vn.edu.tdtu.javatech.springcommerce.model.*;
 import vn.edu.tdtu.javatech.springcommerce.repository.*;
 
 import java.util.Optional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -91,4 +92,24 @@ public class CartService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public List<CartItem> getUserCartItems(String username) {
+        User user = findUserByUsername(username);
+        Cart cart = getCartForUser(user);
+        return cart.getItems();
+    }
+    @Transactional
+    public void clearCart(User user) {
+        Cart cart = getCartForUser(user);
+        cart.getItems().clear();
+        cartRepository.save(cart);
+    }
+
+    public double calculateTotal(List<CartItem> items) {
+        return items.stream()
+                .mapToDouble(item -> item.getQuantity() * item.getProduct().getPrice())
+                .sum();
+    }
+
+
 }
